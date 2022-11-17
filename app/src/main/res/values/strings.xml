@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Tav Task Project</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="mail">e-Mail</string>
+    <string name="flights">Flights</string>
+    <string name="currency_converter">currency converter</string>
+    <string name="enterValidEmail">Please enter valid e-Mail</string>
+    <string name="enterPassword">Please enter password</string>
+    <string name="alertLogin">"The mail or password you entered is incorrect"</string>
+</resources>
