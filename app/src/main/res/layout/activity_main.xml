@@ -29,6 +29,8 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/flightsButton"
                 style="@style/SelectedButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:text="@string/flights"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/currencyConverterButton"
@@ -38,6 +40,8 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/currencyConverterButton"
                 style="@style/DefaultButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:text="@string/currency_converter"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -45,14 +49,13 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.appcompat.widget.AppCompatButton
+        <ImageView
             android:id="@+id/loginButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_centerVertical="true"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="3dp"
-            android:background="@drawable/inset_login_button"
+            android:padding="7dp"
+            android:src="@drawable/login_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="SpeakableTextPresentCheck" />

@@ -1,13 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.currencyConverter.CurrencyConverterFragment">
 
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello" />
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/currencyConverterRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintBottom_toTopOf="@id/converterConstraintLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/converterConstraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/converter_item_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/currencyConverterRecyclerView">
+
+            <EditText
+                android:id="@+id/inputFields"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="50dp"
+                android:background="@drawable/currency_converter_fields_background"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/enter_the_amount"
+                android:inputType="textPersonName"
+                android:text=""
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="@id/amountFields"
+                app:layout_constraintStart_toStartOf="@id/convertButton"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="DuplicateClickableBoundsCheck" />
+
+            <EditText
+                android:id="@+id/amountFields"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="50dp"
+                android:background="@drawable/currency_converter_fields_background"
+                android:ems="10"
+                android:enabled="false"
+                android:gravity="center"
+                android:inputType="textPersonName"
+                android:text=""
+                android:textColor="@color/color_background"
+                app:layout_constraintStart_toStartOf="@id/convertButton"
+                app:layout_constraintTop_toBottomOf="@id/inputFields"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <TextView
+                android:id="@+id/inputFieldCurrency"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/currencies_background"
+                android:gravity="center"
+                android:text="@string/usd"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@id/inputFields"
+                app:layout_constraintEnd_toEndOf="@id/convertButton"
+                app:layout_constraintStart_toStartOf="@id/spinnerConvercies"
+                app:layout_constraintTop_toTopOf="@id/inputFields" />
+
+            <Spinner
+                android:id="@+id/spinnerConvercies"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/currencies_background"
+                android:contentDescription="@string/alert"
+                app:layout_constraintBottom_toBottomOf="@id/amountFields"
+                app:layout_constraintEnd_toEndOf="@id/convertButton"
+                app:layout_constraintStart_toEndOf="@id/amountFields"
+                app:layout_constraintTop_toTopOf="@id/amountFields" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/convertButton"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/currency_convert_button_background"
+                android:text="@string/convert"
+                android:textColor="#ffffff"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

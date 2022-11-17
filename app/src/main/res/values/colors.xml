@@ -5,12 +5,13 @@
     <color name="light_gray">#BCBCBC</color>
     <color name="color_background">#2f2e6a</color>
     <color name="color_tab">#3b4280</color>
-    <color name="color_button">#5b5a86</color>
+    <color name="color_button">#B5B4D5</color>
+    <color name="color_background_light">#9695CD</color>
     <color name="color_recycler_view">#3e396c</color>
     <color name="color_airports">#ccc91d</color>
     <color name="color_state">#6c3257</color>
     <color name="color_departed">#18829b</color>
-    <color name="color_fly_number">#0eb022</color>
+    <color name="color_flight_number">#0eb022</color>
     <color name="color_gate">#a2553d</color>
-    <color name="color_convert">#5ab3b9</color>
+    <color name="color_convert">#73E3EC</color>
 </resources>

@@ -7,5 +7,14 @@
     <string name="currency_converter">currency converter</string>
     <string name="enterValidEmail">Please enter valid e-Mail</string>
     <string name="enterPassword">Please enter password</string>
-    <string name="alertLogin">"The mail or password you entered is incorrect"</string>
+    <string name="alertLogin">The mail or password you entered is incorrect</string>
+    <string name="alert">Alert</string>
+    <string name="loginDialogTag">loginDialog</string>
+    <string name="departure">Departure</string>
+    <string name="arrival">Arrival</string>
+    <string name="convert">Convert</string>
+    <string name="enter_the_amount">Enter the amount</string>
+    <string name="usd">USD</string>
+    <string name="must_login">You must be logged in to use this feature.</string>
+    <string name="ok">OK</string>
 </resources>
