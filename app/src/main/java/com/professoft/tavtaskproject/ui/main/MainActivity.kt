@@ -42,6 +42,12 @@ class MainActivity : BaseActivity() {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 launch {
                     checkDefaultUserCallback()
+                }
+            }
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                launch {
                     checkActiveUserCallback()
                 }
             }
