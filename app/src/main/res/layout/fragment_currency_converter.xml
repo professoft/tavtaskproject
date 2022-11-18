@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable name="viewModel"
+            type="com.professoft.tavtask.ui.currencyConverter.CurrencyConverterViewModel"/>
+    </data>
+<FrameLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.currencyConverter.CurrencyConverterFragment">
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -49,8 +53,19 @@
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="@id/amountFields"
                 app:layout_constraintStart_toStartOf="@id/convertButton"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="DuplicateClickableBoundsCheck" />
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Spinner
+                android:id="@+id/spinnerConvercies"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/currencies_background"
+                android:contentDescription="@string/alert"
+                android:entries="@{viewModel.currencies}"
+                app:layout_constraintBottom_toBottomOf="@id/inputFields"
+                app:layout_constraintEnd_toEndOf="@id/convertButton"
+                app:layout_constraintStart_toEndOf="@id/inputFields"
+                app:layout_constraintTop_toTopOf="@id/inputFields"/>
 
             <EditText
                 android:id="@+id/amountFields"
@@ -65,32 +80,21 @@
                 android:text=""
                 android:textColor="@color/color_background"
                 app:layout_constraintStart_toStartOf="@id/convertButton"
-                app:layout_constraintTop_toBottomOf="@id/inputFields"
-                tools:ignore="SpeakableTextPresentCheck" />
+                app:layout_constraintTop_toBottomOf="@id/inputFields" />
 
             <TextView
-                android:id="@+id/inputFieldCurrency"
+                android:id="@+id/amountFieldsCurrency"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@drawable/currencies_background"
                 android:gravity="center"
-                android:text="@string/usd"
+                android:text="@string/sar"
                 android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="@id/inputFields"
-                app:layout_constraintEnd_toEndOf="@id/convertButton"
-                app:layout_constraintStart_toStartOf="@id/spinnerConvercies"
-                app:layout_constraintTop_toTopOf="@id/inputFields" />
-
-            <Spinner
-                android:id="@+id/spinnerConvercies"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:background="@drawable/currencies_background"
-                android:contentDescription="@string/alert"
                 app:layout_constraintBottom_toBottomOf="@id/amountFields"
                 app:layout_constraintEnd_toEndOf="@id/convertButton"
                 app:layout_constraintStart_toEndOf="@id/amountFields"
                 app:layout_constraintTop_toTopOf="@id/amountFields" />
+
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/convertButton"
@@ -100,6 +104,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/currency_convert_button_background"
+                android:enabled="false"
                 android:text="@string/convert"
                 android:textColor="#ffffff"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -109,3 +114,4 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
+</layout>

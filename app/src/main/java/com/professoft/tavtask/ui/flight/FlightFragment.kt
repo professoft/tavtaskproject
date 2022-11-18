@@ -16,8 +16,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class FlightFragment : Fragment() {
-    private var _binding: FragmentFlightBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentFlightBinding
     lateinit var flightRecyclerView: RecyclerView
     lateinit var flightsAdapter: FlightsAdapter
     lateinit var flightsList: ArrayList<FlightItemsModel>
@@ -27,9 +26,34 @@ class FlightFragment : Fragment() {
 
     private lateinit var viewModel: FlightViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(FlightViewModel::class.java)
+
+    private fun filter(text: String) {
+        val filteredList: ArrayList<FlightItemsModel> = ArrayList()
+
+        for (item in flightsList) {
+            if (item.destination.uppercase(Locale.getDefault())
+                    .contains(text.uppercase(Locale.getDefault()))) {
+                filteredList.add(item)
+            }
+        }
+        if (filteredList.isEmpty()) {
+            Toast.makeText(activity, "Flight Not Found..", Toast.LENGTH_SHORT).show()
+        } else {
+            flightsAdapter.filterList(filteredList)
+        }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentFlightBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
+    }
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel = ViewModelProvider(this)[FlightViewModel::class.java]
 
         flightRecyclerView = binding.flightsRecyclerView
         flightsList = ArrayList()
@@ -56,35 +80,4 @@ class FlightFragment : Fragment() {
             }
         })
     }
-
-    private fun filter(text: String) {
-        val filteredList: ArrayList<FlightItemsModel> = ArrayList()
-
-        for (item in flightsList) {
-            if (item.destination.uppercase(Locale.getDefault())
-                    .contains(text.uppercase(Locale.getDefault()))) {
-                filteredList.add(item)
-            }
-        }
-        if (filteredList.isEmpty()) {
-            Toast.makeText(activity, "Flight Not Found..", Toast.LENGTH_SHORT).show()
-        } else {
-            flightsAdapter.filterList(filteredList)
-        }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentFlightBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
 }

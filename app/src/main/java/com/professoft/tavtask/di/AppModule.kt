@@ -3,6 +3,7 @@ package com.professoft.tavtask.di
 import android.app.Application
 import android.content.Context
 import com.professoft.tavtask.data.realm.RealmDatabase
+import com.professoft.tavtask.utils.UtilityClass
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,6 +26,10 @@ class AppModule {
     internal fun provideRealmDatabase() : RealmDatabase {
         return RealmDatabase()
     }
-
+    @Provides
+    @Singleton
+    internal fun provideUtilityClass() : UtilityClass {
+        return UtilityClass
+    }
 }
 

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Tav Task Project</string>
-    <string name="login">Login</string>
+    <string name="login">LOGIN</string>
     <string name="password">Password</string>
     <string name="mail">e-Mail</string>
     <string name="flights">Flights</string>
@@ -14,7 +14,8 @@
     <string name="arrival">Arrival</string>
     <string name="convert">Convert</string>
     <string name="enter_the_amount">Enter the amount</string>
-    <string name="usd">USD</string>
+    <string name="sar">SAR</string>
     <string name="must_login">You must be logged in to use this feature.</string>
     <string name="ok">OK</string>
+    <string name="cancel">CANCEL</string>
 </resources>

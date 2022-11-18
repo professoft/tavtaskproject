@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<FrameLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.flight.FlightFragment">
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -20,6 +21,7 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/selected_button_background"
             android:text="@string/departure"
+            android:layout_marginEnd="1dp"
             android:textColor="@color/color_background"
             app:layout_constraintEnd_toStartOf="@id/arrivalButton"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -36,6 +38,7 @@
             android:text="@string/arrival"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_goneMarginStart="1dp"
             app:layout_constraintStart_toEndOf="@id/departureButton"
             app:layout_constraintTop_toTopOf="@id/departureButton" />
 
@@ -61,3 +64,4 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
+</layout>
