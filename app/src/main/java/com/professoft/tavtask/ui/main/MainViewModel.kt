@@ -3,8 +3,11 @@ package com.professoft.tavtask.ui.main
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.professoft.tavtask.base.BaseViewModel
+import com.professoft.tavtask.data.datastore.DatastoreRepo
 import com.professoft.tavtask.data.model.User
 import com.professoft.tavtask.data.realm.RealmDatabase
+import com.professoft.tavtask.repositories.FlightRepository
+import com.professoft.tavtask.utils.FlightsResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.realm.kotlin.query.RealmResults
 import io.realm.kotlin.types.ObjectId
@@ -12,12 +15,18 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val realmDatabase: RealmDatabase) :
-    BaseViewModel() {
+class MainViewModel @Inject constructor(private val realmDatabase: RealmDatabase,
+                                        private var datastoreRepo: DatastoreRepo)
+    : BaseViewModel() {
+
     val checkLogin : MutableLiveData<Boolean> = MutableLiveData()
     val checkActiveUser : MutableLiveData<Boolean> = MutableLiveData()
     val checkRegistration : MutableLiveData<Boolean> = MutableLiveData()
-
+    private var mRepository = FlightRepository.getInstance()
+    val mShowNetworkError: MutableLiveData<Boolean> = MutableLiveData()
+    val mShowApiError = MutableLiveData<String>()
+    private var airport: MutableLiveData<List<FlightsResponse>> =
+        MutableLiveData<List<FlightsResponse>>().apply { value = emptyList() }
     private lateinit var realmResults: RealmResults<User>
 
 
@@ -111,5 +120,6 @@ class MainViewModel @Inject constructor(private val realmDatabase: RealmDatabase
         }
     }
 
+    }
 
-}
+

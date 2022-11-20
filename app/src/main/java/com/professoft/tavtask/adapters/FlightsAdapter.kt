@@ -7,10 +7,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.professoft.tavtask.R
-import com.professoft.tavtask.utils.FlightItemsModel
+import com.professoft.tavtask.utils.FlightsResponse
 
 class FlightsAdapter (
-    private var flightList: ArrayList<FlightItemsModel>,
+    private var flightList: List<FlightsResponse>,
 ) : RecyclerView.Adapter<FlightsAdapter.FlightsViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -23,20 +23,22 @@ class FlightsAdapter (
         return FlightsViewHolder(itemView)
     }
 
-    fun filterList(filterlist: ArrayList<FlightItemsModel>) {
+    fun filterList(filterlist: List<FlightsResponse>) {
         flightList = filterlist
         notifyDataSetChanged()
     }
 
-    override fun onBindViewHolder(holder: FlightsAdapter.FlightsViewHolder, position: Int) {
-        holder.flightDate.text = flightList.get(position).flightDate
-        holder.flightNumber.text = flightList.get(position).flightNumber
-        holder.destination.text = flightList.get(position).destination
-        holder.checkInInformation.text = flightList.get(position).checkInInformation
-        holder.status.text = flightList.get(position).status
-        holder.airlineNameWithIcon.setImageResource(flightList.get(position).airlineNameWithIcon)
+    override fun onBindViewHolder(holder: FlightsViewHolder, position: Int) {
+        holder.flightDate.text = flightList.get(position).data.flight_date
+        holder.flightNumber.text = flightList.get(position).data.flight.number
+        holder.destination.text = flightList.get(position).data.arrival.airport
+        holder.gate.text = flightList.get(position).data.departure.gate
+        holder.status.text = flightList.get(position).data.flight_status
+        holder.airlineNameWithIcon.setImageDrawable(flightList.get(position).data.airline.airlineNameWithIcon)
 
     }
+
+
 
     override fun getItemCount(): Int {
         return flightList.size
@@ -46,7 +48,7 @@ class FlightsAdapter (
         val flightDate: TextView = itemView.findViewById(R.id.flightDate)
         val flightNumber: TextView = itemView.findViewById(R.id.flightNumber)
         val destination: TextView = itemView.findViewById(R.id.destination)
-        val checkInInformation: TextView = itemView.findViewById(R.id.checkInInformation)
+        val gate: TextView = itemView.findViewById(R.id.gate)
         val status: TextView = itemView.findViewById(R.id.status)
         val airlineNameWithIcon: ImageView = itemView.findViewById(R.id.airlineNameWithIcon)
     }

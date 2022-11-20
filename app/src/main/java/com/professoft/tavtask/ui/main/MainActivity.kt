@@ -10,19 +10,19 @@ import android.window.OnBackInvokedDispatcher
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.core.os.BuildCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager.TAG
 import androidx.fragment.app.FragmentTransaction
 import com.professoft.tavtask.R
 import com.professoft.tavtask.base.BaseActivity
+import com.professoft.tavtask.databinding.ActivityMainBinding
 import com.professoft.tavtask.ui.components.LoginDialog
 import com.professoft.tavtask.ui.currencyConverter.CurrencyConverterFragment
 import com.professoft.tavtask.ui.flight.FlightFragment
-import androidx.core.os.BuildCompat
-import com.professoft.tavtask.databinding.ActivityMainBinding
-import com.professoft.tavtask.utils.Keys
+import dagger.hilt.android.AndroidEntryPoint
 
-@BuildCompat.PrereleaseSdkCheck
+@BuildCompat.PrereleaseSdkCheck @AndroidEntryPoint
 class MainActivity : BaseActivity() {
     private val viewModel by viewModels<MainViewModel>()
     private lateinit var binding: ActivityMainBinding
@@ -113,8 +113,11 @@ class MainActivity : BaseActivity() {
                 }
 
                true -> {
-                    activeUser = true
+                   activeUser = true
                    loginButton.setImageResource(R.drawable.profile_information)
+                   if(checkActiveUserForCurrencyConverter){
+                       selectFragment(CurrencyConverterFragment(activeUser))
+                   }
                 }
             }
         }
@@ -148,7 +151,6 @@ class MainActivity : BaseActivity() {
             }
             loginDialog?.show()
         }
-        // else profile information
     }
 
     private fun navigateFlights() {

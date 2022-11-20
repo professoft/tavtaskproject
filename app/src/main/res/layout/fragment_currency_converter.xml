@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <data>
-        <variable name="viewModel"
-            type="com.professoft.tavtask.ui.currencyConverter.CurrencyConverterViewModel"/>
-    </data>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
 <FrameLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -21,6 +18,8 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
+            tools:itemCount="5"
+            tools:listitem="@layout/currency_converter_item"
             app:layout_constraintBottom_toTopOf="@id/converterConstraintLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -43,13 +42,13 @@
                 android:id="@+id/inputFields"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/currency_converter_fields_background"
                 android:ems="10"
                 android:gravity="center"
                 android:hint="@string/enter_the_amount"
-                android:inputType="textPersonName"
                 android:text=""
+                android:inputType="numberDecimal|numberSigned"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="@id/amountFields"
                 app:layout_constraintStart_toStartOf="@id/convertButton"
@@ -61,11 +60,12 @@
                 android:layout_height="0dp"
                 android:background="@drawable/currencies_background"
                 android:contentDescription="@string/alert"
-                android:entries="@{viewModel.currencies}"
+                android:entries="@array/currencies"
+                android:gravity="center_vertical"
                 app:layout_constraintBottom_toBottomOf="@id/inputFields"
                 app:layout_constraintEnd_toEndOf="@id/convertButton"
                 app:layout_constraintStart_toEndOf="@id/inputFields"
-                app:layout_constraintTop_toTopOf="@id/inputFields"/>
+                app:layout_constraintTop_toTopOf="@id/inputFields" />
 
             <EditText
                 android:id="@+id/amountFields"

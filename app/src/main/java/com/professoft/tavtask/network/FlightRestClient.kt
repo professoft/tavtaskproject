@@ -5,15 +5,15 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-class RestClient private constructor() {
+class FlightRestClient private constructor() {
     companion object {
-        private const val BASE_URL = "http://api.aviationstack.com/v1/"
-        private lateinit var mApiServices: ApiServices
-        private var mInstance: RestClient? = null
-        fun getInstance(): RestClient {
+        private const val FLIGHT_URL = "http://api.aviationstack.com/v1/"
+        private lateinit var apiServices: ApiServices
+        private var mInstance: FlightRestClient? = null
+        fun getInstance(): FlightRestClient {
             if (mInstance == null) {
                 synchronized(this) {
-                    mInstance = RestClient()
+                    mInstance = FlightRestClient()
                 }
             }
             return mInstance!!
@@ -24,12 +24,14 @@ class RestClient private constructor() {
         val okHttpClient = OkHttpClient().newBuilder().connectTimeout(15, TimeUnit.SECONDS)
             .readTimeout(15, TimeUnit.SECONDS)
             .build()
-        val retrofit = Retrofit.Builder().baseUrl(BASE_URL)
+        val retrofit = Retrofit.Builder().baseUrl(FLIGHT_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-        mApiServices = retrofit.create(ApiServices::class.java)
+        apiServices = retrofit.create(ApiServices::class.java)
     }
 
-    fun getApiService() = mApiServices
+
+    fun getFlightApiService() = apiServices
+
 }
