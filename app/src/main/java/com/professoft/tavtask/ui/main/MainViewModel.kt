@@ -3,30 +3,25 @@ package com.professoft.tavtask.ui.main
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.professoft.tavtask.base.BaseViewModel
-import com.professoft.tavtask.data.datastore.DatastoreRepo
+import com.professoft.tavtask.data.datastore.DataStoreRepo
 import com.professoft.tavtask.data.model.User
 import com.professoft.tavtask.data.realm.RealmDatabase
-import com.professoft.tavtask.repositories.FlightRepository
-import com.professoft.tavtask.utils.FlightsResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.realm.kotlin.query.RealmResults
 import io.realm.kotlin.types.ObjectId
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val realmDatabase: RealmDatabase,
-                                        private var datastoreRepo: DatastoreRepo)
-    : BaseViewModel() {
+class MainViewModel @Inject constructor(
+    private val realmDatabase: RealmDatabase,
+    private val datastoreRepo: DataStoreRepo
+) : BaseViewModel() {
 
-    val checkLogin : MutableLiveData<Boolean> = MutableLiveData()
-    val checkActiveUser : MutableLiveData<Boolean> = MutableLiveData()
-    val checkRegistration : MutableLiveData<Boolean> = MutableLiveData()
-    private var mRepository = FlightRepository.getInstance()
-    val mShowNetworkError: MutableLiveData<Boolean> = MutableLiveData()
-    val mShowApiError = MutableLiveData<String>()
-    private var airport: MutableLiveData<List<FlightsResponse>> =
-        MutableLiveData<List<FlightsResponse>>().apply { value = emptyList() }
+    val checkLogin: MutableLiveData<Boolean> = MutableLiveData()
+    val checkActiveUser: MutableLiveData<Boolean> = MutableLiveData()
+    val checkRegistration: MutableLiveData<Boolean> = MutableLiveData()
     private lateinit var realmResults: RealmResults<User>
 
 
@@ -44,6 +39,7 @@ class MainViewModel @Inject constructor(private val realmDatabase: RealmDatabase
                 loading.value = false
 
                 if (realmResults.size > 0) {
+                    storeDefaultOffset()
                     checkRegistration.postValue(true)
                 } else {
                     checkRegistration.postValue(false)
@@ -75,12 +71,11 @@ class MainViewModel @Inject constructor(private val realmDatabase: RealmDatabase
     }
 
 
-
     fun checkUser(mail: String, password: String) {
         viewModelScope.launch {
             runCatching {
                 loading.value = true
-                realmResults = realmDatabase.checkUser(mail,password)
+                realmResults = realmDatabase.checkUser(mail, password)
 
             }.onFailure {
                 loading.value = false
@@ -91,10 +86,10 @@ class MainViewModel @Inject constructor(private val realmDatabase: RealmDatabase
                 loading.value = false
 
                 if (realmResults.size > 0) {
-                    lateinit var userId : ObjectId
-                    realmResults.forEach{
-                      userId  = it._id
-                   }
+                    lateinit var userId: ObjectId
+                    realmResults.forEach {
+                        userId = it._id
+                    }
                     realmDatabase.logInUser(mail)
                     checkLogin.postValue(true)
                 } else {
@@ -104,7 +99,7 @@ class MainViewModel @Inject constructor(private val realmDatabase: RealmDatabase
         }
     }
 
-    fun registrationDefaultUser(mail: String,password: String) {
+    fun registrationDefaultUser(mail: String, password: String) {
         viewModelScope.launch {
             runCatching {
                 loading.value = true
@@ -114,12 +109,15 @@ class MainViewModel @Inject constructor(private val realmDatabase: RealmDatabase
 
             }.onSuccess {
                 loading.value = false
-                realmDatabase.writeRealm(mail, password,false)
+                realmDatabase.writeRealm(mail, password, false)
                 checkLogin.postValue(true)
             }
         }
     }
 
+    fun storeDefaultOffset() = runBlocking {
+        datastoreRepo.putString("offset", "0")
     }
+}
 
 

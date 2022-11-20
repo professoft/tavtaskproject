@@ -10,11 +10,11 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
-private val Context.dataStore : DataStore<Preferences> by preferencesDataStore(name= "USER")
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "USER")
 
 class DataStoreManager @Inject constructor(
     private val context: Context
-): DatastoreRepo {
+) : DataStoreRepo {
     override suspend fun putString(key: String, value: String) {
         val prefereneKay = stringPreferencesKey(key)
         context.dataStore.edit {

@@ -12,12 +12,14 @@ interface ApiServices {
     @GET("flights")
     fun getDepartureFlights(@Query("access_key") access_key: String,
                             @Query("dep_icao") dep_icao: String,
-                            @Query("limit") limit: String) : Call<FlightsResponse>
+                            @Query("limit") limit: String,
+                            @Query("offset") offset: String) : Call<FlightsResponse>
 
     @GET("flights")
     fun getArrivalFlights(@Query("access_key") access_key: String,
                           @Query("arr_icao") arr_icao: String,
-                          @Query("limit") limit: String) : Call<FlightsResponse>
+                          @Query("limit") limit: String,
+                          @Query("offset") offset: String) : Call<FlightsResponse>
 
     @GET("gh/fawazahmed0/currency-api@1/latest/currencies/sar.json")
     fun getLatestCurrencies() : Call<CurrencyResponseModel>

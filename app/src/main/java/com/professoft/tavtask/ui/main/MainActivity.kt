@@ -22,7 +22,8 @@ import com.professoft.tavtask.ui.currencyConverter.CurrencyConverterFragment
 import com.professoft.tavtask.ui.flight.FlightFragment
 import dagger.hilt.android.AndroidEntryPoint
 
-@BuildCompat.PrereleaseSdkCheck @AndroidEntryPoint
+@BuildCompat.PrereleaseSdkCheck
+@AndroidEntryPoint
 class MainActivity : BaseActivity() {
     private val viewModel by viewModels<MainViewModel>()
     private lateinit var binding: ActivityMainBinding
@@ -30,8 +31,8 @@ class MainActivity : BaseActivity() {
     private lateinit var currencyConverterButton: Button
     private lateinit var loginButton: ImageView
     private var activeUser: Boolean = false
-    private var loginDialog : LoginDialog? = null
-    private var checkActiveUserForCurrencyConverter : Boolean = false
+    private var loginDialog: LoginDialog? = null
+    private var checkActiveUserForCurrencyConverter: Boolean = false
     private var fragment: Fragment? = null
 
 
@@ -112,12 +113,12 @@ class MainActivity : BaseActivity() {
                     }
                 }
 
-               true -> {
-                   activeUser = true
-                   loginButton.setImageResource(R.drawable.profile_information)
-                   if(checkActiveUserForCurrencyConverter){
-                       selectFragment(CurrencyConverterFragment(activeUser))
-                   }
+                true -> {
+                    activeUser = true
+                    loginButton.setImageResource(R.drawable.profile_information)
+                    if (checkActiveUserForCurrencyConverter) {
+                        selectFragment(CurrencyConverterFragment(activeUser))
+                    }
                 }
             }
         }
@@ -126,14 +127,13 @@ class MainActivity : BaseActivity() {
     private fun showAlertDialog(must: Boolean) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.alert))
-        if(must){
+        if (must) {
             builder.setMessage(getString(R.string.must_login))
-        }
-        else{
+        } else {
             builder.setMessage(getString(R.string.alertLogin))
         }
         builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
-            if(must) {
+            if (must) {
                 loginDialog = LoginDialog(this) { mail, password ->
                     viewModel.checkUser(mail, password)
                 }
@@ -169,13 +169,14 @@ class MainActivity : BaseActivity() {
     }
 
     private fun changeButtonStyle(selected: Button, default: Button) {
-        selected.background = ContextCompat.getDrawable(this, R.drawable.selected_button_background);
+        selected.background =
+            ContextCompat.getDrawable(this, R.drawable.selected_button_background);
         default.background = ContextCompat.getDrawable(this, R.drawable.default_button_background);
         selected.setTextColor(ContextCompat.getColor(this, R.color.color_tab))
         default.setTextColor(ContextCompat.getColor(this, R.color.white))
     }
 
-    private fun selectFragment(Fragment: Fragment){
+    private fun selectFragment(Fragment: Fragment) {
         fragment = Fragment
         val fm = supportFragmentManager
         val ft = fm.beginTransaction()
@@ -189,13 +190,12 @@ class MainActivity : BaseActivity() {
             onBackInvokedDispatcher.registerOnBackInvokedCallback(
                 OnBackInvokedDispatcher.PRIORITY_DEFAULT
             ) {
-                    finish()
+                finish()
             }
-        }
-        else {
+        } else {
             onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                        finish()
+                    finish()
                 }
             })
         }
