@@ -11,7 +11,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
-    android:background="@drawable/converter_item_background"
+    android:background="@drawable/searchview_background"
     android:padding="10dp">
 
     <TextView
@@ -26,19 +26,21 @@
 
     <TextView
         android:id="@+id/bid"
-        android:layout_width="wrap_content"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="50dp"
         android:text="@{currencyConverterItem.bid}"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toStartOf="@id/ask"
         app:layout_constraintTop_toTopOf="@id/currencyType" />
 
     <TextView
         android:id="@+id/ask"
-        android:layout_width="wrap_content"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:text="@{currencyConverterItem.ask}"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/currencyType" />
 </androidx.constraintlayout.widget.ConstraintLayout>

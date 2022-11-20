@@ -1,6 +1,6 @@
 package com.professoft.tavtask.utils
 
-class AirportsResponse {
+class AirlinesResponse {
     lateinit var data : FlightsModel
 
     constructor(data: FlightsModel) {

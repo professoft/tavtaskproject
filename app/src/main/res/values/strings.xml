@@ -7,6 +7,7 @@
     <string name="currency_converter">currency converter</string>
     <string name="enterValidEmail">Please enter valid e-Mail</string>
     <string name="enterPassword">Please enter password</string>
+    <string name="enterAmount">Please enter amount</string>
     <string name="alertLogin">The mail or password you entered is incorrect</string>
     <string name="alert">Alert</string>
     <string name="loginDialogTag">loginDialog</string>
@@ -19,6 +20,7 @@
     <string name="ok">OK</string>
     <string name="cancel">CANCEL</string>
     <string name="icao">LTBJ</string>
+    <string name="gate">Gate: %s</string>
     <string-array name="currencies">
         <item name="1inch">1INCH</item>
         <item name="aave">AAVE</item>

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
 <FrameLayout
     android:layout_width="match_parent"
@@ -17,30 +18,32 @@
             style="@style/SelectedButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="50dp"
             android:layout_marginTop="20dp"
+            android:layout_marginEnd="1dp"
             android:background="@drawable/selected_button_background"
             android:text="@string/departure"
-            android:layout_marginEnd="1dp"
             android:textColor="@color/color_background"
             app:layout_constraintEnd_toStartOf="@id/arrivalButton"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:itemCount="5"
+            tools:listitem="@layout/flights_item" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/arrivalButton"
             style="@style/DefaultButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="50dp"
             android:background="@drawable/default_button_background"
             android:text="@string/arrival"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_goneMarginStart="1dp"
             app:layout_constraintStart_toEndOf="@id/departureButton"
-            app:layout_constraintTop_toTopOf="@id/departureButton" />
+            app:layout_constraintTop_toTopOf="@id/departureButton"
+            app:layout_goneMarginStart="1dp" />
 
         <SearchView
             android:id="@+id/searchView"

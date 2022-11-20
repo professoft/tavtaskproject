@@ -5,9 +5,9 @@ import java.math.BigDecimal
 
 class CurrencyResponseModel {
         lateinit var date: String
-        lateinit var sar:HashMap<String, BigDecimal>
+        lateinit var sar:LinkedHashMap<String, BigDecimal>
 
-    constructor(date: String, sar: HashMap<String, BigDecimal>) {
+    constructor(date: String, sar: LinkedHashMap<String, BigDecimal>) {
             this.date = date
             this.sar = sar
         }

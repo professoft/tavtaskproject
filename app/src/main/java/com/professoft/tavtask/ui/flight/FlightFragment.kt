@@ -1,21 +1,27 @@
 package com.professoft.tavtask.ui.flight
 
-import android.graphics.Bitmap
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.professoft.tavtask.R
 import com.professoft.tavtask.adapters.FlightsAdapter
 import com.professoft.tavtask.databinding.FragmentFlightBinding
+import com.professoft.tavtask.utils.FlightsModel
 import com.professoft.tavtask.utils.FlightsResponse
 import java.io.IOException
 import java.io.InputStream
@@ -23,12 +29,15 @@ import java.util.*
 
 
 class FlightFragment : Fragment() {
+    private var dialog: Dialog? = null
     private lateinit var binding: FragmentFlightBinding
     lateinit var flightRecyclerView: RecyclerView
+    lateinit var manager: RecyclerView.LayoutManager
+
     lateinit var flightsAdapter: FlightsAdapter
     private lateinit var departureButton: Button
     private lateinit var arrivalButton: Button
-    lateinit var flightsList: List<FlightsResponse>
+    lateinit var flightsList: FlightsResponse
     private var isDeparture = true;
     companion object {
         fun newInstance() = FlightFragment()
@@ -38,28 +47,31 @@ class FlightFragment : Fragment() {
 
 
     private fun filter(text: String) {
-        val filteredList: ArrayList<FlightsResponse> = ArrayList()
+        val filteredList: ArrayList<FlightsModel> = ArrayList()
 
-        for (item in flightsList) {
+        var position = 0
+        for (item in flightsList.data) {
             if(isDeparture) {
-                if (item.data.arrival.airport.uppercase(Locale.getDefault())
+                if (item.arrival.airport.uppercase(Locale.getDefault())
                         .contains(text.uppercase(Locale.getDefault()))
                 ) {
-                    filteredList.add(item)
+                    filteredList.add(flightsList.data[position])
                 }
             }
             else{
-                if (item.data.departure.airport.uppercase(Locale.getDefault())
+                if (item.departure.airport.uppercase(Locale.getDefault())
                         .contains(text.uppercase(Locale.getDefault()))
                 ) {
-                    filteredList.add(item)
+                    filteredList.add(flightsList.data[position])
                 }
             }
+            position++
         }
         if (filteredList.isEmpty()) {
             Toast.makeText(activity, "Flight Not Found..", Toast.LENGTH_SHORT).show()
         } else {
-            flightsAdapter.filterList(filteredList)
+            flightsList.data=filteredList
+            binding.flightsRecyclerView.adapter!!.notifyDataSetChanged()
         }
     }
 
@@ -74,13 +86,13 @@ class FlightFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this)[FlightViewModel::class.java]
-
+        manager = LinearLayoutManager(context)
         departureButton = binding.departureButton
         arrivalButton = binding.arrivalButton
         flightRecyclerView = binding.flightsRecyclerView
-        //viewModel.getDepartureFlights(requireActivity(), getString(R.string.icao))
-        //updateFlightsCallback()
-
+        viewModel.getDepartureFlights(requireActivity(), getString(R.string.icao))
+        updateFlightsCallback()
+        observeLoadingCallback()
         departureButton.setOnClickListener{
             isDeparture=true
             changeButtonStyle(departureButton, arrivalButton)
@@ -108,13 +120,22 @@ class FlightFragment : Fragment() {
 
     private fun updateFlightsCallback() {
         viewModel.flightList.observe(requireActivity()) {
-            flightsList = it
-            flightsAdapter = FlightsAdapter(flightsList)
-            flightRecyclerView.adapter = flightsAdapter
-            var position: Int=0
-            flightsList.forEach {
-                flightsList.get(position).data.airline.airlineNameWithIcon = iconMatching(it.data.airline.name)
-                position ++
+            if (it != null) {
+                flightsList = it
+                flightsAdapter = FlightsAdapter(flightsList.data)
+                flightRecyclerView.adapter = flightsAdapter
+                var position: Int = 0
+                flightsList.data.forEach {
+                    flightsList.data[position].airline.airlineNameWithIcon =
+                        iconMatching(it.airline.name)
+                    flightsList.data[position].flight.isDeparture = isDeparture
+                    position++
+                }
+                binding.flightsRecyclerView.apply {
+                    adapter = FlightsAdapter(flightsList.data)
+                    layoutManager = manager
+                }
+                binding.flightsRecyclerView.adapter!!.notifyDataSetChanged()
             }
         }
     }
@@ -140,7 +161,7 @@ class FlightFragment : Fragment() {
         if(flightDate.contains("sunexpress")) {
             return getAsset("sunexpress_icon.png")
         }
-        return context?.getDrawable(R.drawable.airplane)!!
+        return requireActivity().resources.getDrawable(R.drawable.airplane)!!
     }
 
     private fun getAsset(s: String) : Drawable {
@@ -159,4 +180,36 @@ class FlightFragment : Fragment() {
         selected.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_tab))
         default.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
     }
+
+    private fun observeLoadingCallback() {
+        viewModel?.loading?.observe {
+            if (it) {
+                showLoading()
+            } else {
+                hideLoading()
+            }
+
+        }
+    }
+
+    private fun showLoading() {
+        hideLoading()
+        dialog = Dialog(requireContext())
+        dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog?.setContentView(R.layout.dialog_loading)
+        dialog?.setCancelable(false)
+        dialog?.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        dialog?.show()
+    }
+
+    private fun hideLoading() {
+        if (context == null) return
+        dialog?.dismiss()
+    }
+
+}
+
+private fun <T> MutableLiveData<T>?.observe(function: (T) -> Unit) {
+
 }

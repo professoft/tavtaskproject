@@ -5,10 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import com.professoft.tavtask.base.BaseViewModel
 import com.professoft.tavtask.interfaces.NetworkResponseCallback
 import com.professoft.tavtask.repositories.CurrencyRepository
-import com.professoft.tavtask.utils.CurrencyConverterItemModel
 import com.professoft.tavtask.utils.CurrencyResponseModel
 import com.professoft.tavtask.utils.NetworkHelper
-import java.math.BigDecimal
 
 
 class CurrencyConverterViewModel : BaseViewModel() {

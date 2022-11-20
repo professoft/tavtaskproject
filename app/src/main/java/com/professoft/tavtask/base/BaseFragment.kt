@@ -4,23 +4,33 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.Window
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.viewbinding.ViewBinding
 import com.professoft.tavtask.R
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-@AndroidEntryPoint
-abstract class BaseActivity : AppCompatActivity() {
+abstract class BaseFragment<VB : ViewBinding> : Fragment() {
     private var baseViewModel: BaseViewModel? = null
     private var dialog: Dialog? = null
+    private var _binding: VB? = null
+    val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        baseViewModel?.let { initViewModel(it) }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = getViewBinding()
+        return binding.root
     }
+
+    abstract fun getViewBinding(): VB
 
     fun initViewModel(viewModel: BaseViewModel) {
         baseViewModel = viewModel
@@ -42,7 +52,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private fun showLoading() {
         hideLoading()
-        dialog = Dialog(this)
+        dialog = Dialog(requireContext())
         dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog?.setContentView(R.layout.dialog_loading)
         dialog?.setCancelable(false)
@@ -52,7 +62,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun hideLoading() {
-        if (isDestroyed) return
+        if (context == null) return
         dialog?.dismiss()
     }
 

@@ -1,5 +1,7 @@
 package com.professoft.tavtask.utils
 
 class FlightModel {
-    lateinit var number: String
+    var number: String = ""
+    var isDeparture: Boolean = false
+
 }

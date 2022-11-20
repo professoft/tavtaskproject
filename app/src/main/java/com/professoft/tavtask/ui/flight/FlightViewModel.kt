@@ -10,16 +10,16 @@ import com.professoft.tavtask.utils.NetworkHelper
 
 
 class FlightViewModel : BaseViewModel() {
-    var flightList: MutableLiveData<List<FlightsResponse>> =
-        MutableLiveData<List<FlightsResponse>>().apply { value = emptyList() }
+    var flightResponse: MutableLiveData<FlightsResponse> = MutableLiveData()
+    var flightList: MutableLiveData<FlightsResponse> = MutableLiveData()
     private var mRepository = FlightRepository.getInstance()
     val mShowNetworkError: MutableLiveData<Boolean> = MutableLiveData()
     val mShowApiError = MutableLiveData<String>()
 
-    fun getArrivalFlights(context: Context,arr_icao: String): MutableLiveData<List<FlightsResponse>> {
+    fun getArrivalFlights(context: Context,arr_icao: String) {
         if (NetworkHelper.isOnline(context)) {
             loading.value=true
-            flightList = mRepository.getArrivvalFlights(object : NetworkResponseCallback {
+            flightResponse = mRepository.getArrivvalFlights(object : NetworkResponseCallback {
                 override fun onNetworkFailure(th: Throwable) {
                     mShowApiError.value = th.message
                     loading.value=false
@@ -29,15 +29,17 @@ class FlightViewModel : BaseViewModel() {
                     loading.value=false
                 }
             }, arr_icao)
+            if(flightResponse.value != null) {
+                flightList.postValue(flightResponse.value)
+            }
         } else {
             mShowNetworkError.value = true
         }
-        return flightList
     }
-    fun getDepartureFlights(context: Context,arr_icao: String): MutableLiveData<List<FlightsResponse>> {
+    fun getDepartureFlights(context: Context,arr_icao: String) {
         if (NetworkHelper.isOnline(context)) {
             loading.value=true
-            flightList = mRepository.getDepartureFlights(object : NetworkResponseCallback {
+            flightResponse = mRepository.getDepartureFlights(object : NetworkResponseCallback {
                 override fun onNetworkFailure(th: Throwable) {
                     mShowApiError.value = th.message
                     loading.value=false
@@ -47,9 +49,11 @@ class FlightViewModel : BaseViewModel() {
                     loading.value=false
                 }
             }, arr_icao)
+            if(flightResponse.value != null) {
+                flightList.postValue(flightResponse.value)
+            }
         } else {
             mShowNetworkError.value = true
         }
-        return flightList
     }
 }

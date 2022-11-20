@@ -2,8 +2,15 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
+    <data>
+        <variable
+            name="flightsItem"
+            type="com.professoft.tavtask.utils.FlightsModel"/>
+    </data>
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/flightItemLayout"
+        android:background="@drawable/searchview_background"
+        android:layout_margin="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp">
@@ -12,8 +19,9 @@
             android:id="@+id/flightDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
+            android:text="@{flightsItem.flight_date}"
             android:textColor="@color/white"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:src="@drawable/airplane"
+            android:src="@{flightsItem.airline.airlineNameWithIcon }"
             app:layout_constraintBottom_toBottomOf="@id/flightNumber"
             app:layout_constraintLeft_toRightOf="@id/flightDate"
             app:layout_constraintTop_toTopOf="@id/flightDate" />
@@ -32,8 +40,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text=""
+            android:text="@{flightsItem.flight.number}"
             android:textColor="@color/color_flight_number"
+            android:textStyle="bold"
             app:layout_constraintLeft_toRightOf="@id/airlineNameWithIcon"
             app:layout_constraintTop_toTopOf="@id/flightDate" />
 
@@ -41,9 +50,10 @@
             android:id="@+id/destination"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
+            android:text="@{flightsItem.flight.departure? flightsItem.departure.airport : flightsItem.arrival.airport}"
             android:textColor="@color/color_airports"
             app:layout_constraintEnd_toEndOf="parent"
+            android:textStyle="bold"
             app:layout_constraintTop_toTopOf="@+id/flightDate" />
 
         <TextView
@@ -51,7 +61,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text=""
+            android:textColor="@color/color_gate"
+            android:textStyle="bold"
+            android:text="@{@string/gate(flightsItem.flight.departure? flightsItem.departure.gate : flightsItem.arrival.gate)}"
             app:layout_constraintStart_toStartOf="@id/flightDate"
             app:layout_constraintTop_toBottomOf="@id/airlineNameWithIcon" />
 
@@ -59,7 +71,9 @@
             android:id="@+id/status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
+            android:textColor="@color/color_state"
+            android:textStyle="bold"
+            android:text="@{flightsItem.flight_status}"
             app:layout_constraintRight_toRightOf="@id/destination"
             app:layout_constraintTop_toTopOf="@id/gate" />
     </androidx.constraintlayout.widget.ConstraintLayout>

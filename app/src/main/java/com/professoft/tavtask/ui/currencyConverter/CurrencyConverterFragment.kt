@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.ads.mediationtestsuite.viewmodels.ViewModelFactory
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.professoft.tavtask.R
-import com.professoft.tavtask.adapters.CurrencyConverterAdapter
+import com.professoft.tavtask.adapters.CurrencyAdapter
 import com.professoft.tavtask.databinding.FragmentCurrencyConverterBinding
 import com.professoft.tavtask.utils.CurrencyConverterItemModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,11 +19,12 @@ import java.math.BigDecimal
 @AndroidEntryPoint
 class CurrencyConverterFragment(var activeUser: Boolean) : Fragment() {
     private var _binding: FragmentCurrencyConverterBinding? = null
+    lateinit var manager: RecyclerView.LayoutManager
+
     private val binding get() = _binding!!
-    val currencyConverterAdapter = CurrencyConverterAdapter()
     lateinit var currencyConverterList: List<CurrencyConverterItemModel>
     lateinit var currenyRatio : HashMap <String,BigDecimal>
-
+    lateinit var arrayAdapter: ArrayAdapter<String>
 
     companion object {
         fun newInstance() = CurrencyConverterFragment(false)
@@ -42,21 +44,20 @@ class CurrencyConverterFragment(var activeUser: Boolean) : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this)[CurrencyConverterViewModel::class.java]
+        manager = LinearLayoutManager(context)
         var arrayCurrencies : Array<String> = resources.getStringArray(R.array.currencies)
         binding.convertButton.isEnabled = activeUser
-        val arrayAdapter = ArrayAdapter<String>(requireActivity(), R.layout.spinner_item, requireActivity().resources.getStringArray(R.array.currencies))
+        arrayAdapter = ArrayAdapter<String>(requireActivity(), R.layout.spinner_item, requireActivity().resources.getStringArray(R.array.currencies))
         binding.spinnerConvercies.adapter = arrayAdapter
 
-        /*currencyConverterList = MutableList(1){ CurrencyConverterItemModel("","","") }
-        currencyConverterAdapter= CurrencyConverterAdapter(currencyConverterList)*/
-        binding.currencyConverterRecyclerView.adapter = currencyConverterAdapter
+        //binding.currencyConverterRecyclerView.adapter = currencyConverterAdapter
         viewModel.getLatestCurrencies(requireActivity())
         latestCurrenciesCallback(arrayCurrencies)
         binding.convertButton.setOnClickListener {
             if (nullCheck()) {
-                var ratio: BigDecimal? = currenyRatio.get(arrayCurrencies.get(binding.spinnerConvercies.selectedItemPosition))
-                var amount: BigDecimal? = binding.inputFields.text.toString().toBigDecimal()
-                var result: String? = (ratio!!.multiply(amount)).toString()
+                var ratio = currenyRatio.get(arrayCurrencies.get(binding.spinnerConvercies.selectedItemPosition))
+                var amount = binding.inputFields.text.toString().toBigDecimal()
+                var result = (ratio!!.multiply(amount)).toString()
                 binding.amountFields.setText(result)
             }
         }
@@ -67,21 +68,30 @@ class CurrencyConverterFragment(var activeUser: Boolean) : Fragment() {
                 currencyConverterList =
                     MutableList(it.sar.size) { CurrencyConverterItemModel("", "", "") }
                 for (position in 0..it.sar.size - 1) {
-                    currencyConverterList.get(position).currencyType = arrayCurrencies[position]
+                    var currency_name: String = ArrayList<String>(it.sar.keys).get(position)
+                    currencyConverterList.get(position).currencyType = currency_name
+                    arrayCurrencies[position] = currency_name
+
                     currenyRatio = it.sar
-                    var ask: BigDecimal = ArrayList<BigDecimal>(it.sar.values).get(position)
-                    currencyConverterList.get(position).ask = ask.toString()
-                    currencyConverterList.get(position).bid = ask.toString()
+                    var ratio: BigDecimal = ArrayList<BigDecimal>(it.sar.values).get(position)
+                    currencyConverterList.get(position).ask = ratio.setScale(3, BigDecimal.ROUND_HALF_EVEN).toString()
+                    currencyConverterList.get(position).bid = ratio.setScale(3, BigDecimal.ROUND_HALF_EVEN).toString()
                 }
-                    currencyConverterAdapter.setCurrencyList(currencyConverterList)
+            arrayAdapter.notifyDataSetChanged()
+            binding.currencyConverterRecyclerView.apply {
+                adapter = CurrencyAdapter(currencyConverterList)
+                layoutManager = manager
+            }
+            binding.currencyConverterRecyclerView.adapter!!.notifyDataSetChanged()
+            //currencyConverterAdapter.setCurrencyList(currencyConverterList)
             }
     }
     private fun nullCheck() : Boolean{
 
-        if(binding.amountFields.text.isNullOrEmpty()){
-            binding.amountFields.error = context?.getString(R.string.enterPassword)
+        if(binding.inputFields.text.isNullOrEmpty()){
+            binding.inputFields.error = context?.getString(R.string.enterAmount)
         }
 
-        return  binding.amountFields.error.isNullOrEmpty()
+        return  binding.inputFields.error.isNullOrEmpty()
     }
 }
