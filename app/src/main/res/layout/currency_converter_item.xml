@@ -19,6 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:gravity="center"
         android:text="@{currencyConverterItem.currencyType}"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,7 +29,7 @@
         android:id="@+id/bid"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="50dp"
+        android:layout_marginEnd="60dp"
         android:text="@{currencyConverterItem.bid}"
         android:textColor="@color/white"
         app:layout_constraintEnd_toStartOf="@id/ask"
@@ -36,7 +37,7 @@
 
     <TextView
         android:id="@+id/ask"
-        android:layout_width="50dp"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:text="@{currencyConverterItem.ask}"

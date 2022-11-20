@@ -207,9 +207,20 @@ class FlightFragment : Fragment() {
         if (context == null) return
         dialog?.dismiss()
     }
+    val mScrollListener: RecyclerView.OnScrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            val visibleItemCount: Int = manager.getChildCount()
+            val totalItemCount: Int = manager.getItemCount()
+            if (flightsList.pagination.offset + visibleItemCount >= totalItemCount) {
+                viewModel.getDepartureFlights(requireActivity(), getString(R.string.icao))
 
+                flightsAdapter.notifyDataSetChanged()
+            }
+        }
+    }
 }
 
 private fun <T> MutableLiveData<T>?.observe(function: (T) -> Unit) {
+
 
 }
