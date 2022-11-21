@@ -18,6 +18,5 @@ object UtilityClass {
         } else {
             EMAIL.matcher(email).matches()
         }
-
     }
 }

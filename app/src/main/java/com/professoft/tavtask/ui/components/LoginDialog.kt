@@ -3,6 +3,7 @@ package com.professoft.tavtask.ui.components
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
 import android.view.ViewGroup
 import android.widget.EditText
 import com.professoft.tavtask.R
@@ -26,7 +27,7 @@ class LoginDialog(context: Context, var loginClickListener: (mail: String, passw
         mailEditText = binding.mailEditText
         passwordEditText = binding.passwordEditText
         binding.loginButton.setOnClickListener {
-            if(nullCheck()) {
+            if(nullCheck(mailEditText.text,passwordEditText.text)) {
                 loginClickListener(
                     mailEditText.text.toString(),
                     passwordEditText.text.toString()
@@ -35,12 +36,12 @@ class LoginDialog(context: Context, var loginClickListener: (mail: String, passw
         }
     }
 
-    private fun nullCheck() : Boolean{
+    private fun nullCheck(mail: Editable, password: Editable): Boolean{
 
-        if(mailEditText.text.isNullOrEmpty()  || !UtilityClass.isEmailValid(mailEditText.text.toString())){
+        if(mail.isNullOrEmpty()  || !UtilityClass.isEmailValid(mail.toString())){
            mailEditText.error = context.getString(R.string.enterValidEmail)
         }
-        if(passwordEditText.text.isNullOrEmpty()){
+        if(password.isNullOrEmpty()){
             passwordEditText.error = context.getString(R.string.enterPassword)
         }
 
