@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import com.professoft.tavtask.R
 
 abstract class BaseFragment<VB : ViewBinding> : Fragment() {
     private var baseViewModel: BaseViewModel? = null
@@ -48,11 +49,13 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
 
     fun observeLoadingCallback() {
         baseViewModel?.loading?.observe(viewLifecycleOwner) {
-            when (it) {
-                true -> baseActivity?.showLoading()
-                false -> baseActivity?.hideLoading()
+                if(it != requireContext().getString(R.string.loading_hide_message)) {
+                    baseActivity?.showLoading(it)
+                }
+                else {
+                    baseActivity?.hideLoading()
+                }
             }
-        }
     }
     fun observeNetworkErrorCallback(){
         baseViewModel?.networkError?.observe(viewLifecycleOwner) {

@@ -15,29 +15,25 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val realmDatabase: RealmDatabase,
-    private val datastoreRepo: DataStoreRepo
+    private val datastoreRepo: DataStoreRepo, private var realmDatabase: RealmDatabase
 ) : BaseViewModel() {
 
     val checkLogin: MutableLiveData<Boolean> = MutableLiveData()
+
+    lateinit var realmResults: RealmResults<User>
     val checkActiveUser: MutableLiveData<Boolean> = MutableLiveData()
     val checkRegistration: MutableLiveData<Boolean> = MutableLiveData()
-    private lateinit var realmResults: RealmResults<User>
 
 
     fun checkDefaultUser() {
         viewModelScope.launch {
             runCatching {
                 realmResults = realmDatabase.getUser()
-                loading.value = true
             }.onFailure {
-                loading.value = false
 
                 checkRegistration.postValue(false)
 
             }.onSuccess {
-                loading.value = false
-
                 if (realmResults.size > 0) {
                     checkRegistration.postValue(true)
                 } else {
@@ -47,43 +43,19 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun checkActiveUser() {
-        viewModelScope.launch {
-            runCatching {
-                loading.value = true
-                realmResults = realmDatabase.findActiveUser()
 
-            }.onFailure {
-                loading.value = false
-                checkActiveUser.postValue(false)
-
-            }.onSuccess {
-                loading.value = false
-                storeDefaultOffset()
-                if (realmResults.size > 0) {
-                    login.value = true
-                    checkActiveUser.postValue(true)
-                } else {
-                    checkActiveUser.postValue(false)
-                }
-            }
-        }
-    }
 
 
     fun checkUser(mail: String, password: String) {
         viewModelScope.launch {
             runCatching {
-                loading.value = true
                 realmResults = realmDatabase.checkUser(mail, password)
 
             }.onFailure {
-                loading.value = false
 
                 checkLogin.postValue(false)
 
             }.onSuccess {
-                loading.value = false
 
                 if (realmResults.size > 0) {
                     lateinit var userId: ObjectId
@@ -99,23 +71,37 @@ class MainViewModel @Inject constructor(
             }
         }
     }
-
     fun registrationDefaultUser(mail: String, password: String) {
         viewModelScope.launch {
             runCatching {
-                loading.value = true
             }.onFailure {
-                loading.value = false
                 checkLogin.postValue(false)
 
             }.onSuccess {
-                loading.value = false
                 realmDatabase.writeRealm(mail, password, false)
                 checkLogin.postValue(true)
             }
         }
     }
+    fun checkActiveUser() {
+        viewModelScope.launch {
+            runCatching {
+                realmResults = realmDatabase.findActiveUser()
 
+            }.onFailure {
+                checkActiveUser.postValue(false)
+
+            }.onSuccess {
+                storeDefaultOffset()
+                if (realmResults.size > 0) {
+                    login.value = true
+                    checkActiveUser.postValue(true)
+                } else {
+                    checkActiveUser.postValue(false)
+                }
+            }
+        }
+    }
     private fun storeDefaultOffset() = runBlocking {
         datastoreRepo.putString("offset", "0")
     }

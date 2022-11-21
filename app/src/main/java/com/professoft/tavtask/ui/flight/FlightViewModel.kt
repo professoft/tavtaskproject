@@ -2,6 +2,7 @@ package com.professoft.tavtask.ui.flight
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
+import com.professoft.tavtask.R
 import com.professoft.tavtask.base.BaseViewModel
 import com.professoft.tavtask.data.datastore.DataStoreRepo
 import com.professoft.tavtask.interfaces.NetworkResponseCallback
@@ -32,7 +33,7 @@ class FlightViewModel @Inject constructor(private var datastoreRepo: DataStoreRe
                 override fun onNetworkSuccess() {
                 }
             }
-            loading.value = true
+            loading.value = context.getString(R.string.flight_loading_message)
             mFlightCall = FlightRestClient.getInstance().getFlightApiService()
                 .getArrivalFlights(Keys.apiKey(), arr_icao, "10", getOffset())
             mFlightCall.enqueue(object : Callback<FlightsResponse> {
@@ -42,13 +43,13 @@ class FlightViewModel @Inject constructor(private var datastoreRepo: DataStoreRe
                     response: Response<FlightsResponse>
                 ) {
                     flightList.postValue(response.body())
-                    loading.value = false
+                    loading.value = context.getString(R.string.loading_hide_message)
                     mutableCallback.onNetworkSuccess()
                 }
 
                 override fun onFailure(call: Call<FlightsResponse>, t: Throwable) {
                     networkError.value = t.message
-                    loading.value = false
+                    loading.value = context.getString(R.string.loading_hide_message)
                     mutableCallback.onNetworkFailure(t)
                 }
 
@@ -65,7 +66,7 @@ class FlightViewModel @Inject constructor(private var datastoreRepo: DataStoreRe
                 override fun onNetworkSuccess() {
                 }
             }
-            loading.value = true
+            loading.value = context.getString(R.string.flight_loading_message)
             mFlightCall = FlightRestClient.getInstance().getFlightApiService()
                 .getDepartureFlights(Keys.apiKey(), dep_icao, "10", getOffset())
             mFlightCall.enqueue(object : Callback<FlightsResponse> {
@@ -75,13 +76,13 @@ class FlightViewModel @Inject constructor(private var datastoreRepo: DataStoreRe
                     response: Response<FlightsResponse>
                 ) {
                     flightList.postValue(response.body())
-                    loading.value = false
+                    loading.value = context.getString(R.string.loading_hide_message)
                     mutableCallback.onNetworkSuccess()
                 }
 
                 override fun onFailure(call: Call<FlightsResponse>, t: Throwable) {
                     networkError.value = t.message
-                    loading.value = false
+                    loading.value = context.getString(R.string.loading_hide_message)
                     mutableCallback.onNetworkFailure(t)
                 }
 
@@ -93,7 +94,7 @@ class FlightViewModel @Inject constructor(private var datastoreRepo: DataStoreRe
         datastoreRepo.putString("offset", offset)
     }
 
-    private fun getOffset(): String = runBlocking {
+     fun getOffset(): String = runBlocking {
         datastoreRepo.getString("offset")!!
     }
 }

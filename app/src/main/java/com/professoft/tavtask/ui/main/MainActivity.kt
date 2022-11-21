@@ -1,9 +1,7 @@
 package com.professoft.tavtask.ui.main
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.window.OnBackInvokedDispatcher
@@ -12,8 +10,9 @@ import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.os.BuildCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager.TAG
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.MutableLiveData
+import com.professoft.point.data.EventBus.CustomMessageEvent
 import com.professoft.tavtask.R
 import com.professoft.tavtask.base.BaseActivity
 import com.professoft.tavtask.databinding.ActivityMainBinding
@@ -30,11 +29,10 @@ class MainActivity : BaseActivity() {
     private lateinit var flightsButton: Button
     private lateinit var currencyConverterButton: Button
     private lateinit var loginButton: ImageView
-    private var activeUser: Boolean = false
     private var loginDialog: LoginDialog? = null
     private var checkActiveUserForCurrencyConverter: Boolean = false
     private var fragment: Fragment? = null
-
+    var loginEvent = MutableLiveData<CustomMessageEvent>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,38 +66,12 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun checkLoginCallback() {
-        viewModel.checkLogin.observe(this) {
-            when (it) {
-                false -> {
-                    showAlertDialog(false)
-                }
-                true -> {
 
-                    loginDialog?.let { dialog ->
-                        if (dialog.isShowing) {
-                            dialog.dismiss()
-                        }
-                    }
-                    checkActiveUserForCurrencyConverter = false
-                    activeUser = true
-                    loginButton.setImageResource(R.drawable.profile_information)
-                }
-            }
-        }
-    }
 
-    @SuppressLint("RestrictedApi")
     private fun checkDefaultUserCallback() {
         viewModel.checkRegistration.observe(this) {
-            when (it) {
-                false -> {
+            if(!it) {
                     viewModel.registrationDefaultUser("user@test.com", "1234")
-                }
-
-                true -> {
-                    Log.d(TAG, "Default user creation successful")
-                }
             }
         }
     }
@@ -124,27 +96,31 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun showAlertDialog(must: Boolean) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(getString(R.string.alert))
-        if (must) {
-            builder.setMessage(getString(R.string.must_login))
-        } else {
-            builder.setMessage(getString(R.string.alertLogin))
-        }
-        builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
-            if (must) {
-                loginDialog = LoginDialog(this) { mail, password ->
-                    viewModel.checkUser(mail, password)
+    private fun checkLoginCallback() {
+        viewModel.checkLogin.observe(this) {
+            when (it) {
+                false -> {
+                    showAlertDialog(false)
                 }
-                loginDialog?.show()
+                true -> {
+
+                    loginDialog?.let { dialog ->
+                        if (dialog.isShowing) {
+                            dialog.dismiss()
+                        }
+                    }
+                    activeUser = true
+                    val event = CustomMessageEvent("login")
+
+                    if (loginEvent.hasActiveObservers()) {
+                        loginEvent.postValue(event)
+                    }
+                }
             }
         }
-        builder.show()
     }
 
     private fun loginOrProfileInformation() {
-
         if (!activeUser) {
             loginDialog = LoginDialog(this) { mail, password ->
                 viewModel.checkUser(mail, password)
@@ -199,5 +175,23 @@ class MainActivity : BaseActivity() {
                 }
             })
         }
+    }
+    fun showAlertDialog(must: Boolean) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(getString(R.string.alert))
+        if (must) {
+            builder.setMessage(getString(R.string.must_login))
+        } else {
+            builder.setMessage(getString(R.string.alertLogin))
+        }
+        builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
+            if (must) {
+                loginDialog = LoginDialog(this) { mail, password ->
+                    viewModel.checkUser(mail, password)
+                }
+                loginDialog?.show()
+            }
+        }
+        builder.show()
     }
 }

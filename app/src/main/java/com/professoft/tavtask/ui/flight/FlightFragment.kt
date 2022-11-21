@@ -113,7 +113,7 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
                 return false
             }
         })
-        viewModel.loading.postValue(true)
+        viewModel.loading.postValue(requireContext().getString(R.string.flight_loading_message))
         viewModel.getDepartureFlights(requireActivity(), getString(R.string.icao))
         isDeparture = true
     }
@@ -203,10 +203,10 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                viewModel.loading.postValue(true)
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager?
                 if (!isLoading) {
                     if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == flightsList.data.size - 1) {
+                        viewModel.loading.postValue(requireContext().getString(R.string.flight_updating_message))
                         loadMore()
                         isLoading = true
                     }

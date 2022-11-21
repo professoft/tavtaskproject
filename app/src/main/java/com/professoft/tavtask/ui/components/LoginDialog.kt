@@ -27,7 +27,7 @@ class LoginDialog(context: Context, var loginClickListener: (mail: String, passw
         mailEditText = binding.mailEditText
         passwordEditText = binding.passwordEditText
         binding.loginButton.setOnClickListener {
-            if(nullCheck(mailEditText.text,passwordEditText.text)) {
+            if(nullCheck(mailEditText.text.toString(),passwordEditText.text.toString())) {
                 loginClickListener(
                     mailEditText.text.toString(),
                     passwordEditText.text.toString()
@@ -36,7 +36,7 @@ class LoginDialog(context: Context, var loginClickListener: (mail: String, passw
         }
     }
 
-    private fun nullCheck(mail: Editable, password: Editable): Boolean{
+    private fun nullCheck(mail: String, password: String): Boolean{
 
         if(mail.isNullOrEmpty()  || !UtilityClass.isEmailValid(mail.toString())){
            mailEditText.error = context.getString(R.string.enterValidEmail)

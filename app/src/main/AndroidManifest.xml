@@ -13,6 +13,7 @@
         android:usesCleartextTraffic="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.TavTaskProject">
+        <service android:name=".helpers.IntentService"/>
         <activity
             android:name="com.professoft.tavtask.ui.main.MainActivity"
             android:exported="true" >

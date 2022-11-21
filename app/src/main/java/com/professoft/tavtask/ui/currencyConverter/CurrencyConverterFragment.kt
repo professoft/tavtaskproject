@@ -4,9 +4,11 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,16 +16,17 @@ import com.professoft.tavtask.R
 import com.professoft.tavtask.adapters.CurrencyAdapter
 import com.professoft.tavtask.base.BaseFragment
 import com.professoft.tavtask.databinding.FragmentCurrencyConverterBinding
+import com.professoft.tavtask.helpers.IntentService
 import com.professoft.tavtask.utils.CurrencyConverterItemModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.math.BigDecimal
+import java.math.RoundingMode
 
 
 @AndroidEntryPoint
 class CurrencyConverterFragment(var activeUser: Boolean) :
     BaseFragment<FragmentCurrencyConverterBinding>() {
     lateinit var manager: RecyclerView.LayoutManager
-
     lateinit var currencyConverterList: List<CurrencyConverterItemModel>
     lateinit var currenyRatio: HashMap<String, BigDecimal>
     lateinit var arrayAdapter: ArrayAdapter<String>
@@ -55,15 +58,21 @@ class CurrencyConverterFragment(var activeUser: Boolean) :
         binding.convertButton.setOnClickListener {
             if (nullCheck()) {
                 dismissKeyboard(requireActivity())
-                var ratio =
-                    currenyRatio.get(arrayCurrencies.get(binding.spinnerConvercies.selectedItemPosition))
-                var amount = binding.inputFields.text.toString().toBigDecimal()
-                var result = (ratio!!.multiply(amount))
-                binding.amountFields.setText(
-                    result.setScale(2, BigDecimal.ROUND_HALF_EVEN).toString()
-                )
+                var ratio =currenyRatio.get(arrayCurrencies.get(binding.spinnerConvercies.selectedItemPosition))!!
+                var input =binding.inputFields.text.toString().toBigDecimal()
+                var result = viewModel.convertCurrency(ratio,input)
+                binding.amountFields.setText(result.toString())
             }
         }
+        eventBusListening()
+    }
+
+    private fun eventBusListening() {
+        IntentService.loginEvent.observe(
+            requireActivity(),
+            Observer { event ->
+                binding.convertButton.isEnabled = true
+            })
     }
 
     private fun latestCurrenciesCallback(arrayCurrencies: Array<String>) {
@@ -77,10 +86,8 @@ class CurrencyConverterFragment(var activeUser: Boolean) :
 
                 currenyRatio = it.sar
                 var ratio: BigDecimal = ArrayList<BigDecimal>(it.sar.values)[position]
-                currencyConverterList[position].ask =
-                    ratio.setScale(2, BigDecimal.ROUND_HALF_EVEN).toString()
-                currencyConverterList[position].bid =
-                    ratio.setScale(2, BigDecimal.ROUND_HALF_EVEN).toString()
+                currencyConverterList[position].ask = viewModel.bigDecimalFormat(ratio).toString()
+                currencyConverterList[position].bid = viewModel.bigDecimalFormat(ratio).toString()
             }
             arrayAdapter.notifyDataSetChanged()
             binding.currencyConverterRecyclerView.apply {

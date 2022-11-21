@@ -1,9 +1,11 @@
-package com.professoft.tavtask.utils
+package com.professoft.tavtask.ui.utils
 
-import com.google.common.truth.Truth.assertThat
+import com.professoft.tavtask.utils.UtilityClass
+import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import kotlin.random.Random
 
 /**
  * A Class covering MainViewModel login test cases
@@ -24,16 +26,15 @@ internal class UtilityClassTest{
 
     @Test
     fun testInvalidEmail() {
-        for (email in unVerifiedEmailAdresses) {
-            var result = UtilityClass.isEmailValid(email)
-            assertThat(result).isEqualTo(true)
-        }
+        var randomPosition = Random.nextInt(6)
+        var result = UtilityClass.isEmailValid(unVerifiedEmailAdresses[randomPosition])
+        Assert.assertEquals(result,true)
     }
 
     @Test
     fun testValidEmail() {
         var result = UtilityClass.isEmailValid(verifiedEmail)
-        assertThat(result).isEqualTo(true)
+        Assert.assertEquals(result,true)
     }
 
 }

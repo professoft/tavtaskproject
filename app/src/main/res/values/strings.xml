@@ -22,6 +22,11 @@
     <string name="ok">OK</string>
     <string name="cancel">CANCEL</string>
     <string name="icao">LTBJ</string>
+    <string name="flight_loading_message">Flights loading... Please Wait...</string>
+    <string name="flight_updating_message">Flights are updating... Please Wait...</string>
+    <string name="currency_loading_message">Latest currencies loading... Please Wait...</string>
+    <string name="login_loading_message">Logining in... Please Wait...</string>
+    <string name="loading_hide_message">Hide</string>
     <string name="gate">Gate: %s</string>
     <string-array name="currencies">
         <item name="1inch">1INCH</item>
