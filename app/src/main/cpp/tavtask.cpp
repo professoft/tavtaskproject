@@ -11,6 +11,6 @@
 extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_professoft_tavtask_utils_Keys_apiKey(JNIEnv *env, jobject thiz) {
-    std::string api_key = "25ede74aca9d19dd73fc1b8ead5515aa";
+    std::string api_key = "07475fecb4d865c85055192ba24393cb";
     return env->NewStringUTF(api_key.c_str());
 }

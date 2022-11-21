@@ -11,37 +11,42 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
-    android:background="@drawable/searchview_background"
+    android:background="@drawable/converter_item_background"
     android:padding="10dp">
 
     <TextView
         android:id="@+id/currencyType"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:gravity="center"
+        android:textStyle="bold"
         android:text="@{currencyConverterItem.currencyType}"
         android:textColor="@color/white"
+        app:layout_constraintEnd_toStartOf="@id/bid"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/bid"
-        android:layout_width="50dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="60dp"
         android:text="@{currencyConverterItem.bid}"
         android:textColor="@color/white"
+        android:gravity="center"
+        app:layout_constraintStart_toEndOf="@id/currencyType"
         app:layout_constraintEnd_toStartOf="@id/ask"
         app:layout_constraintTop_toTopOf="@id/currencyType" />
 
     <TextView
         android:id="@+id/ask"
-        android:layout_width="60dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:text="@{currencyConverterItem.ask}"
         android:textColor="@color/white"
+        android:gravity="center"
+        app:layout_constraintStart_toEndOf="@id/bid"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/currencyType" />
 </androidx.constraintlayout.widget.ConstraintLayout>

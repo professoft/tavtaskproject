@@ -1,26 +1,21 @@
 package com.professoft.tavtask.ui.flight
 
-import android.app.Dialog
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.professoft.tavtask.R
 import com.professoft.tavtask.adapters.FlightsAdapter
+import com.professoft.tavtask.base.BaseFragment
 import com.professoft.tavtask.databinding.FragmentFlightBinding
 import com.professoft.tavtask.utils.FlightsModel
 import com.professoft.tavtask.utils.FlightsResponse
@@ -31,9 +26,7 @@ import java.util.*
 
 
 @AndroidEntryPoint
-class FlightFragment : Fragment() {
-    private var dialog: Dialog? = null
-    private lateinit var binding: FragmentFlightBinding
+class FlightFragment : BaseFragment<FragmentFlightBinding>() {
     private lateinit var flightRecyclerView: RecyclerView
     private lateinit var manager: RecyclerView.LayoutManager
 
@@ -54,65 +47,64 @@ class FlightFragment : Fragment() {
     private fun filter(text: String) {
         val filteredList: ArrayList<FlightsModel> = ArrayList()
 
-        var position = 0
-        for (item in flightsList.data) {
+        for ((position, item) in flightsList.data.withIndex()) {
             if (isDeparture) {
-                if (item.arrival.airport.uppercase(Locale.getDefault())
-                        .contains(text.uppercase(Locale.getDefault()))
-                ) {
-                    filteredList.add(flightsList.data[position])
-                }
-            } else {
                 if (item.departure.airport.uppercase(Locale.getDefault())
                         .contains(text.uppercase(Locale.getDefault()))
                 ) {
                     filteredList.add(flightsList.data[position])
                 }
+            } else {
+                if (item.arrival.airport.uppercase(Locale.getDefault())
+                        .contains(text.uppercase(Locale.getDefault()))
+                ) {
+                    filteredList.add(flightsList.data[position])
+                }
             }
-            position++
         }
         if (filteredList.isEmpty()) {
             Toast.makeText(activity, "Flight Not Found..", Toast.LENGTH_SHORT).show()
         } else {
-            flightsList.data = filteredList
-            binding.flightsRecyclerView.adapter!!.notifyDataSetChanged()
+            binding.flightsRecyclerView.adapter = FlightsAdapter(filteredList)
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentFlightBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this)[FlightViewModel::class.java]
+        initViewModel(viewModel)
         manager = LinearLayoutManager(context)
         departureButton = binding.departureButton
         arrivalButton = binding.arrivalButton
         flightRecyclerView = binding.flightsRecyclerView
-        viewModel.getDepartureFlights(requireActivity(), getString(R.string.icao),viewModel.getOffset())
-        updateFlightsCallback()
         observeLoadingCallback()
+        observeNetworkErrorCallback()
+        updateFlightsCallback()
+        initScrollListener()
+
         departureButton.setOnClickListener {
+            viewModel.setOffset("0")
             isDeparture = true
             changeButtonStyle(departureButton, arrivalButton)
-            viewModel.getDepartureFlights(requireActivity(), getString(R.string.icao),viewModel.getOffset())
+            viewModel.getDepartureFlights(requireActivity(), getString(R.string.icao))
         }
 
         arrivalButton.setOnClickListener {
+            viewModel.setOffset("0")
             isDeparture = false
             changeButtonStyle(arrivalButton, departureButton)
-            viewModel.getArrivalFlights(requireActivity(), getString(R.string.icao),viewModel.getOffset())
+            viewModel.getArrivalFlights(requireActivity(), getString(R.string.icao))
         }
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
             android.widget.SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(p0: String?): Boolean {
+            override fun onQueryTextSubmit(search: String?): Boolean {
+                if (search != null) {
+                    filter(search)
+                }
+                else{
+                    Toast.makeText(requireActivity(),requireActivity().getString(R.string.enterText),Toast.LENGTH_SHORT)
+                }
                 return false
             }
 
@@ -121,15 +113,31 @@ class FlightFragment : Fragment() {
                 return false
             }
         })
+        viewModel.loading.postValue(true)
+        viewModel.getDepartureFlights(requireActivity(), getString(R.string.icao))
+        isDeparture = true
     }
 
     private fun updateFlightsCallback() {
-        viewModel.flightList.observe(requireActivity()) {
+        viewModel.flightList.observe(requireActivity()) { it ->
             if (it != null) {
                 flightsList = it
+                var position = 0
+                flightsList.data.forEach { data ->
+                    if(isDeparture){
+                        flightsList.data[position].departure.airport = data.arrival.airport
+                    }
+                    if (data.arrival.gate.isNullOrBlank()) {
+                        flightsList.data[position].arrival.gate = "Unspecified"
+                        flightsList.data[position].departure.gate = data.arrival.gate
+                    } else if (data.departure.gate.isNullOrBlank()) {
+                        flightsList.data[position].departure.gate = "Unspecified"
+                    }
+                    position++
+                }
                 flightsAdapter = FlightsAdapter(flightsList.data)
                 flightRecyclerView.adapter = flightsAdapter
-                var position: Int = 0
+                position = 0
                 flightsList.data.forEach {
                     flightsList.data[position].airline.airlineNameWithIcon =
                         iconMatching(it.airline.name)
@@ -146,37 +154,37 @@ class FlightFragment : Fragment() {
     }
 
     private fun iconMatching(flightDate: String): Drawable {
-        if (flightDate.contains("turkish")) {
+        if (flightDate.contains("Turkish")) {
             return getAsset("turkish_airlines_icon.png")
         }
-        if (flightDate.contains("pegasus")) {
+        if (flightDate.contains("Pegasus")) {
             return getAsset("pegasus_airlines_icon.png")
         }
-        if (flightDate.contains("azerbaijan")) {
+        if (flightDate.contains("Azerbaijan")) {
             return getAsset("azerbaijan_airlines_icon.png")
         }
-        if (flightDate.contains("aegan")) {
+        if (flightDate.contains("Aegan")) {
             return getAsset("aegean_airlines_icon.png")
         }
-        if (flightDate.contains("freebird")) {
+        if (flightDate.contains("Freebird")) {
             return getAsset("freebird_airlines_icon.png")
         }
-        if (flightDate.contains("qatar")) {
+        if (flightDate.contains("Qatar")) {
             return getAsset("qatar_airways_icon.png")
         }
-        if (flightDate.contains("sunexpress")) {
+        if (flightDate.contains("Sunexpress")) {
             return getAsset("sunexpress_icon.png")
         }
-        return requireActivity().resources.getDrawable(R.drawable.airplane)!!
+        return ContextCompat.getDrawable(requireActivity(),R.drawable.tav_airports_international)!!
     }
 
     private fun getAsset(s: String): Drawable {
-        try {
-            val ims: InputStream? = context?.getAssets()?.open(s)
+        return try {
+            val ims: InputStream? = context?.assets?.open(s)
             val d = Drawable.createFromStream(ims, null)
-            return d!!
+            d!!
         } catch (ex: IOException) {
-            return context?.getDrawable(R.drawable.airplane)!!
+            context?.getDrawable(R.drawable.tav_airports_international)!!
         }
     }
 
@@ -189,41 +197,13 @@ class FlightFragment : Fragment() {
         default.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
     }
 
-    private fun observeLoadingCallback() {
-        viewModel.loading.observe {
-            if (it) {
-                showLoading()
-            } else {
-                hideLoading()
-            }
-
-        }
-    }
-
-    private fun showLoading() {
-        hideLoading()
-        dialog = Dialog(requireContext())
-        dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog?.setContentView(R.layout.dialog_loading)
-        dialog?.setCancelable(false)
-        dialog?.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        dialog?.show()
-    }
-
-    private fun hideLoading() {
-        if (context == null) return
-        dialog?.dismiss()
-    }
 
     private fun initScrollListener() {
         flightRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-            }
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
+                viewModel.loading.postValue(true)
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager?
                 if (!isLoading) {
                     if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == flightsList.data.size - 1) {
@@ -236,29 +216,24 @@ class FlightFragment : Fragment() {
     }
 
     private fun loadMore() {
-        flightsAdapter.notifyItemInserted(flightsList.data.size - 1)
         val handler = Handler()
         handler.postDelayed(Runnable {
-            val scrollPosition: Int = flightsList.data.size
-            flightsAdapter.notifyItemRemoved(scrollPosition)
-            var currentSize = scrollPosition
-            val nextLimit = currentSize + 10
-            while (currentSize - 1 < nextLimit) {
-                if(isDeparture){
-                    viewModel.getDepartureFlights(requireActivity(),getString(R.string.icao),viewModel.getOffset())
-                }
-                else{
-                    viewModel.getArrivalFlights(requireActivity(),getString(R.string.icao),viewModel.getOffset())
-                }
+            if (isDeparture) {
+                viewModel.getDepartureFlights(requireActivity(), getString(R.string.icao))
+            } else {
+                viewModel.getArrivalFlights(requireActivity(), getString(R.string.icao))
             }
             flightsAdapter.notifyDataSetChanged()
             isLoading = false
         }, 2000)
     }
 
-
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentFlightBinding {
+        return FragmentFlightBinding.inflate(inflater, container, false)
+    }
 }
 
-private fun <T> MutableLiveData<T>.observe(function: (T) -> Unit) {
 
-}

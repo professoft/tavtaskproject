@@ -26,38 +26,43 @@
 
             <TextView
                 android:id="@+id/currencyType"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:text="Current Type"
+                android:gravity="center"
                 android:textColor="@color/white"
+                app:layout_constraintEnd_toStartOf="@id/bid"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/bid"
-                android:layout_width="50dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="50dp"
                 android:text="Bid"
+                android:gravity="center"
                 android:textColor="@color/white"
+                app:layout_constraintStart_toEndOf="@id/currencyType"
                 app:layout_constraintEnd_toStartOf="@id/ask"
                 app:layout_constraintTop_toTopOf="@id/currencyType" />
 
             <TextView
                 android:id="@+id/ask"
-                android:layout_width="50dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:text="Ask"
+                android:gravity="center"
                 android:textColor="@color/white"
+                app:layout_constraintStart_toEndOf="@id/bid"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/currencyType" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/currencyConverterRecyclerView"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
@@ -122,7 +127,7 @@
                 android:gravity="center"
                 android:inputType="textPersonName"
                 android:text=""
-                android:textColor="@color/color_background"
+                android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="@id/convertButton"
                 app:layout_constraintTop_toBottomOf="@id/inputFields" />
 

@@ -13,16 +13,34 @@
         android:layout_height="match_parent"
         android:background="@color/color_background">
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="100dp"
+            android:background="@drawable/flat_line"
+            app:layout_constraintEnd_toEndOf="@id/arrivalButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </TextView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/departureButton"
             style="@style/SelectedButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="19dp"
             android:layout_marginEnd="1dp"
             android:background="@drawable/selected_button_background"
             android:text="@string/departure"
+            android:textAllCaps="false"
             android:textColor="@color/color_background"
             app:layout_constraintEnd_toStartOf="@id/arrivalButton"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -36,28 +54,35 @@
             style="@style/DefaultButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="50dp"
+            android:layout_marginEnd="20dp"
             android:background="@drawable/default_button_background"
             android:text="@string/arrival"
+            android:textAllCaps="false"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/departureButton"
             app:layout_constraintTop_toTopOf="@id/departureButton"
-            app:layout_goneMarginStart="1dp" />
+            android:layout_marginStart="1dp" />
 
         <SearchView
             android:id="@+id/searchView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
             android:background="@drawable/searchview_background"
+            android:queryHint="@string/search"
+            android:textCursorDrawable="@null"
+            app:iconifiedByDefault="false"
             app:layout_constraintEnd_toEndOf="@id/arrivalButton"
             app:layout_constraintStart_toStartOf="@id/departureButton"
-            app:layout_constraintTop_toBottomOf="@id/departureButton" />
+            app:layout_constraintTop_toBottomOf="@id/departureButton"
+            app:queryBackground="@null" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/flightsRecyclerView"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
             app:layout_constraintBottom_toBottomOf="parent"

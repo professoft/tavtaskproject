@@ -39,7 +39,6 @@ class MainViewModel @Inject constructor(
                 loading.value = false
 
                 if (realmResults.size > 0) {
-                    storeDefaultOffset()
                     checkRegistration.postValue(true)
                 } else {
                     checkRegistration.postValue(false)
@@ -60,8 +59,9 @@ class MainViewModel @Inject constructor(
 
             }.onSuccess {
                 loading.value = false
-
+                storeDefaultOffset()
                 if (realmResults.size > 0) {
+                    login.value = true
                     checkActiveUser.postValue(true)
                 } else {
                     checkActiveUser.postValue(false)
@@ -90,6 +90,7 @@ class MainViewModel @Inject constructor(
                     realmResults.forEach {
                         userId = it._id
                     }
+                    login.value = true
                     realmDatabase.logInUser(mail)
                     checkLogin.postValue(true)
                 } else {
@@ -115,7 +116,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun storeDefaultOffset() = runBlocking {
+    private fun storeDefaultOffset() = runBlocking {
         datastoreRepo.putString("offset", "0")
     }
 }

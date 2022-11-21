@@ -13,7 +13,9 @@
     <string name="loginDialogTag">loginDialog</string>
     <string name="departure">Departure</string>
     <string name="arrival">Arrival</string>
+    <string name="search">Search flight with airport</string>
     <string name="convert">Convert</string>
+    <string name="enterText">"Please enter text"</string>
     <string name="enter_the_amount">Enter the amount</string>
     <string name="sar">SAR</string>
     <string name="must_login">You must be logged in to use this feature.</string>

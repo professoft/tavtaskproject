@@ -1,11 +1,9 @@
 package com.professoft.tavtask.ui.main
 
+import com.professoft.tavtask.data.datastore.DataStoreRepo
 import com.professoft.tavtask.data.realm.RealmDatabase
-import com.professoft.tavtask.utils.UtilityClass
-import io.realm.kotlin.RealmConfiguration
 import org.junit.*
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.*
 import org.powermock.modules.junit4.PowerMockRunner
 
@@ -30,8 +28,8 @@ class MainViewModelUnitTest {
 
 
         private val realmDatabase : RealmDatabase = mock(RealmDatabase::class.java)
-        private var loginViewModel =  MainViewModel(mock(RealmDatabase::class.java))
- 
+        private var loginViewModel =  MainViewModel(mock(RealmDatabase::class.java),mock(DataStoreRepo::class.java))
+
         @Test
         fun writeDefaultUser() {
             verify(realmDatabase.writeRealm(VerifiedEmail, PASSWORD, false))

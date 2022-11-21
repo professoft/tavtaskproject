@@ -5,8 +5,10 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Window
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.professoft.tavtask.R
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,14 +21,13 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        observeLoadingCallback()
         baseViewModel?.let { initViewModel(it) }
     }
 
     fun initViewModel(viewModel: BaseViewModel) {
         baseViewModel = viewModel
-        baseViewModel?.viewModelScope?.launch {
-            observeLoadingCallback()
-        }
+        observeLoadingCallback()
     }
 
     private fun observeLoadingCallback() {
@@ -40,7 +41,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    private fun showLoading() {
+    open fun showLoading() {
         hideLoading()
         dialog = Dialog(this)
         dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -51,13 +52,16 @@ abstract class BaseActivity : AppCompatActivity() {
         dialog?.show()
     }
 
-    private fun hideLoading() {
+    open fun hideLoading() {
         if (isDestroyed) return
         dialog?.dismiss()
     }
+    fun <T> LiveData<T>.observe(block: (T) -> Unit) = observe(this@BaseActivity, Observer {
+        block(it)
+    })
 
+    open fun showAlertMessage(networkError: String){
+        Toast.makeText(this,networkError,Toast.LENGTH_SHORT)
+    }
 }
 
-private fun <T> MutableLiveData<T>?.observe(function: (T) -> Unit) {
-
-}

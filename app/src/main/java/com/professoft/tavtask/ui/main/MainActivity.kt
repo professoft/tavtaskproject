@@ -46,7 +46,7 @@ class MainActivity : BaseActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-
+        initViewModel(viewModel)
         selectFragment(FlightFragment())
         flightsButton = binding.flightsButton
         currencyConverterButton = binding.currencyConverterButton
