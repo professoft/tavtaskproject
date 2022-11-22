@@ -26,7 +26,7 @@ class CurrencyConverterFragment(var activeUser: Boolean) :
     BaseFragment<FragmentCurrencyConverterBinding>() {
     lateinit var manager: RecyclerView.LayoutManager
     lateinit var currencyConverterList: List<CurrencyConverterItemModel>
-    lateinit var currenyRatio: HashMap<String, BigDecimal>
+    private lateinit var currencyRatio: HashMap<String, BigDecimal>
     lateinit var arrayAdapter: ArrayAdapter<String>
 
     companion object {
@@ -56,7 +56,7 @@ class CurrencyConverterFragment(var activeUser: Boolean) :
         binding.convertButton.setOnClickListener {
             if (nullCheck()) {
                 dismissKeyboard(requireActivity())
-                var ratio =currenyRatio.get(arrayCurrencies.get(binding.spinnerConvercies.selectedItemPosition))!!
+                var ratio =currencyRatio.get(arrayCurrencies.get(binding.spinnerConvercies.selectedItemPosition))!!
                 var input =binding.inputFields.text.toString().toBigDecimal()
                 var result = viewModel.convertCurrency(ratio,input)
                 binding.amountFields.setText(result.toString())
@@ -82,7 +82,7 @@ class CurrencyConverterFragment(var activeUser: Boolean) :
                 currencyConverterList[position].currencyType = currencyName
                 arrayCurrencies[position] = currencyName
 
-                currenyRatio = it.sar
+                currencyRatio = it.sar
                 var ratio: BigDecimal = ArrayList<BigDecimal>(it.sar.values)[position]
                 currencyConverterList[position].ask = ratio.toString()
                 currencyConverterList[position].bid = ratio.toString()
@@ -116,7 +116,7 @@ class CurrencyConverterFragment(var activeUser: Boolean) :
     ): FragmentCurrencyConverterBinding {
         return FragmentCurrencyConverterBinding.inflate(inflater, container, false)
     }
-    fun dismissKeyboard(activity: Activity) {
+    private fun dismissKeyboard(activity: Activity) {
         val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         if (null != activity.currentFocus) imm.hideSoftInputFromWindow(
             activity.currentFocus!!

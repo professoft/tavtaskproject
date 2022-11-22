@@ -19,6 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 abstract class BaseActivity : AppCompatActivity() {
     private var baseViewModel: BaseViewModel? = null
     private var dialog: Dialog? = null
+    private var builder: AlertDialog.Builder? = null
     private var loginDialog: LoginDialog? = null
     var activeUser: Boolean = false
 
@@ -60,12 +61,18 @@ abstract class BaseActivity : AppCompatActivity() {
         if (isDestroyed) return
         dialog?.dismiss()
     }
+
     fun <T> LiveData<T>.observe(block: (T) -> Unit) = observe(this@BaseActivity, Observer {
         block(it)
     })
 
     open fun showAlertMessage(networkError: String){
-        Toast.makeText(this,networkError,Toast.LENGTH_SHORT).show()
+        hideLoading()
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(getString(R.string.alert))
+        builder.setMessage(networkError)
+        builder.setPositiveButton(getString(R.string.ok)) { _, _ ->}
+        dialog = builder.show()
     }
 }
 

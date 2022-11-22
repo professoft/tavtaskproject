@@ -180,7 +180,7 @@ class MainActivity : BaseActivity() {
             })
         }
     }
-    fun showAlertDialog(must: Boolean) {
+    private fun showAlertDialog(must: Boolean) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.alert))
         if (must) {
