@@ -11,6 +11,7 @@
     <string name="loginDialogTag">loginDialog</string>
     <string name="departure">Departure</string>
     <string name="arrival">Arrival</string>
+    <string name="unspecified">Unspecified</string>
     <string name="search">Search flight with airport</string>
     <string name="convert">Convert</string>
     <string name="enterText">"Please enter text"</string>

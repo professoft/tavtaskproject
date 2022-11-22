@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
@@ -145,9 +144,10 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
                 var position = 0
                 flightsList.data.forEach { data ->
                     if (data.arrival.gate.isNullOrEmpty()) {
-                        flightsList.data[position].arrival.gate = "Unspecified"
-                    } else if (data.departure.gate.isNullOrEmpty()) {
-                        flightsList.data[position].departure.gate = "Unspecified"
+                        flightsList.data[position].arrival.gate = getString(R.string.unspecified)
+                    }
+                    if (data.departure.gate.isNullOrEmpty()) {
+                        flightsList.data[position].departure.gate = getString(R.string.unspecified)
                     }
                     position++
                 }
