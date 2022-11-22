@@ -32,7 +32,12 @@ class FlightViewModel @Inject constructor(private var datastoreRepo: DataStoreRe
                     call: Call<FlightResponseModel>,
                     response: Response<FlightResponseModel>
                 ) {
+                    if(response.raw().code == 200) {
                     flightList.postValue(response.body())
+                    }
+                    else{
+                        networkError.value = response.raw().message
+                    }
                     loading.value = context.getString(R.string.loading_hide_message)
                 }
 
@@ -56,7 +61,12 @@ class FlightViewModel @Inject constructor(private var datastoreRepo: DataStoreRe
                     call: Call<FlightResponseModel>,
                     response: Response<FlightResponseModel>
                 ) {
-                    flightList.postValue(response.body())
+                    if(response.raw().code == 200) {
+                        flightList.postValue(response.body())
+                    }
+                    else{
+                        networkError.value = response.raw().message
+                    }
                     loading.value = context.getString(R.string.loading_hide_message)
                 }
 

@@ -65,7 +65,7 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
             }
         }
         if (filteredList.isEmpty()) {
-            Toast.makeText(activity, "Flight Not Found..", Toast.LENGTH_SHORT).show()
+            showWarning(getString(R.string.warning_search))
         } else {
             binding.flightsRecyclerView.adapter = FlightsAdapter(filteredList)
         }
@@ -120,7 +120,7 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
                     filter(search)
                 }
                 else{
-                    Toast.makeText(requireActivity(),getString(R.string.enterText),Toast.LENGTH_SHORT).show()
+                    showWarning(getString(R.string.enterText))
                 }
                 return false
             }
@@ -144,19 +144,13 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
                 flightsList = it
                 var position = 0
                 flightsList.data.forEach { data ->
-                    if(isDeparture){
-                        flightsList.data[position].departure.airport = data.arrival.airport
-                    }
                     if (data.arrival.gate.isNullOrEmpty()) {
                         flightsList.data[position].arrival.gate = "Unspecified"
-                        flightsList.data[position].departure.gate = data.arrival.gate
                     } else if (data.departure.gate.isNullOrEmpty()) {
                         flightsList.data[position].departure.gate = "Unspecified"
                     }
                     position++
                 }
-                flightsAdapter = FlightsAdapter(flightsList.data)
-                flightRecyclerView.adapter = flightsAdapter
                 position = 0
                 flightsList.data.forEach {
                     flightsList.data[position].airline.airlineNameWithIcon =
@@ -164,6 +158,7 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
                     flightsList.data[position].flight.isDeparture = isDeparture
                     position++
                 }
+                flightsAdapter = FlightsAdapter(flightsList.data)
                 binding.flightsRecyclerView.apply {
                     adapter = FlightsAdapter(flightsList.data)
                     layoutManager = manager

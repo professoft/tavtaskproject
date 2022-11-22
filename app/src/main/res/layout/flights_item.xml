@@ -50,7 +50,7 @@
             android:id="@+id/destination"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{flightsItem.departure.airport}"
+            android:text="@{flightsItem.flight.departure? flightsItem.arrival.airport : flightsItem.departure.airport}"
             android:textColor="@color/color_airports"
             app:layout_constraintEnd_toEndOf="parent"
             android:gravity="end"
@@ -65,7 +65,7 @@
             android:layout_marginTop="10dp"
             android:textColor="@color/color_gate"
             android:textStyle="bold"
-            android:text="@{@string/gate(flightsItem.departure.gate)}"
+            android:text="@{@string/gate(flightsItem.flight.departure? flightsItem.departure.gate : flightsItem.arrival.gate)}"
             app:layout_constraintStart_toStartOf="@id/flightDate"
             app:layout_constraintTop_toBottomOf="@id/destination" />
 

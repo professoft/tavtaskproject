@@ -46,7 +46,7 @@ abstract class BaseActivity : AppCompatActivity() {
         dialog = Dialog(this)
         dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog?.setContentView(R.layout.dialog_loading)
-        dialog?.setCancelable(false)
+        dialog?.setCancelable(true)
         val message = dialog?.findViewById<TextView>(R.id.messageTextView)
         message?.text = loading_message
         dialog?.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))

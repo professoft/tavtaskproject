@@ -21,6 +21,7 @@
     <string name="warning_no_internet_connection">Please check your internet connection</string>
     <string name="warning_incorrect_login">The mail or password you entered is incorrect</string>
     <string name="warning_login_must">You must be logged in to use this feature.</string>
+    <string name="warning_search">Flight Not Found.</string>
 
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
