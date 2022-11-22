@@ -8,7 +8,7 @@ import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.query.RealmResults
 
-class RealmDatabase{
+class RealmDatabase {
 
     private val config = RealmConfiguration.Builder(schema = setOf(User::class))
         .build()
@@ -33,9 +33,9 @@ class RealmDatabase{
                 .find()
     }
 
-    fun checkUser(mail: String,password: String): RealmResults<User> {
-        return realm.query<User>("mail = '$mail' AND password = '$password'")
-            .find()
+    fun checkUser(mail: String,password: String): Boolean {
+        return (realm.query<User>("mail = '$mail' AND password = '$password'")
+            .find()).size > 0
     }
 
     suspend fun logInUser(mail: String ) {

@@ -20,7 +20,8 @@ class MainViewModel @Inject constructor(
 
     val checkLogin: MutableLiveData<Boolean> = MutableLiveData()
 
-    lateinit var realmResults: RealmResults<User>
+    private lateinit var realmResults: RealmResults<User>
+    private var checkResults = false
     val checkActiveUser: MutableLiveData<Boolean> = MutableLiveData()
     val checkRegistration: MutableLiveData<Boolean> = MutableLiveData()
 
@@ -46,18 +47,17 @@ class MainViewModel @Inject constructor(
 
 
 
-    fun checkUser(mail: String, password: String) {
+    fun checkUser(mail: String, password: String)  {
         viewModelScope.launch {
             runCatching {
-                realmResults = realmDatabase.checkUser(mail, password)
+                checkResults = realmDatabase.checkUser(mail, password)
 
             }.onFailure {
 
                 checkLogin.postValue(false)
 
             }.onSuccess {
-
-                if (realmResults.size > 0) {
+                if (checkResults) {
                     lateinit var userId: ObjectId
                     realmResults.forEach {
                         userId = it._id
@@ -83,6 +83,7 @@ class MainViewModel @Inject constructor(
             }
         }
     }
+
     fun checkActiveUser() {
         viewModelScope.launch {
             runCatching {
