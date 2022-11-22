@@ -3,11 +3,13 @@ package com.professoft.tavtask.ui.flight
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -27,18 +29,18 @@ import java.util.*
 
 @AndroidEntryPoint
 class FlightFragment : BaseFragment<FragmentFlightBinding>() {
+
+    private lateinit var binding: FragmentFlightBinding
     private lateinit var flightRecyclerView: RecyclerView
     private lateinit var manager: RecyclerView.LayoutManager
-
     private lateinit var flightsAdapter: FlightsAdapter
     private lateinit var departureButton: Button
     private lateinit var arrivalButton: Button
     private lateinit var flightsList: FlightResponseModel
-    private var isDeparture = true;
+    private var isDeparture = true
     private var isLoading = false
 
     companion object {
-        fun newInstance() = FlightFragment()
     }
 
     private lateinit var viewModel: FlightViewModel
@@ -69,8 +71,13 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        super.onCreateView(inflater, container, savedInstanceState)
+        binding = FragmentFlightBinding.inflate(LayoutInflater.from(layoutInflater.context))
         viewModel = ViewModelProvider(this)[FlightViewModel::class.java]
         initViewModel(viewModel)
         manager = LinearLayoutManager(context)
@@ -83,17 +90,27 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
         initScrollListener()
 
         departureButton.setOnClickListener {
+            if(!viewModel.isOnline(requireActivity())){
+                showWarning(getString(R.string.warning_no_internet_connection))
+            }
+            else{
+                viewModel.getDepartureFlights(requireActivity(), getString(R.string.icao))
+            }
             viewModel.setOffset("0")
             isDeparture = true
             changeButtonStyle(departureButton, arrivalButton)
-            viewModel.getDepartureFlights(requireActivity(), getString(R.string.icao))
         }
 
         arrivalButton.setOnClickListener {
+            if(!viewModel.isOnline(requireActivity())){
+                showWarning(getString(R.string.warning_no_internet_connection))
+            }
+            else{
+                viewModel.getArrivalFlights(requireActivity(), getString(R.string.icao))
+            }
             viewModel.setOffset("0")
             isDeparture = false
             changeButtonStyle(arrivalButton, departureButton)
-            viewModel.getArrivalFlights(requireActivity(), getString(R.string.icao))
         }
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
@@ -113,9 +130,12 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
                 return false
             }
         })
-        viewModel.loading.postValue(requireContext().getString(R.string.flight_loading_message))
+        if(viewModel.isOnline(requireActivity())){
+            viewModel.loading.postValue(requireContext().getString(R.string.flight_loading_message))
+        }
         viewModel.getDepartureFlights(requireActivity(), getString(R.string.icao))
         isDeparture = true
+        return binding.root
     }
 
     private fun updateFlightsCallback() {
@@ -127,10 +147,10 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
                     if(isDeparture){
                         flightsList.data[position].departure.airport = data.arrival.airport
                     }
-                    if (data.arrival.gate.isNullOrBlank()) {
+                    if (data.arrival.gate.isNullOrEmpty()) {
                         flightsList.data[position].arrival.gate = "Unspecified"
                         flightsList.data[position].departure.gate = data.arrival.gate
-                    } else if (data.departure.gate.isNullOrBlank()) {
+                    } else if (data.departure.gate.isNullOrEmpty()) {
                         flightsList.data[position].departure.gate = "Unspecified"
                     }
                     position++
@@ -149,6 +169,8 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
                     layoutManager = manager
                 }
                 binding.flightsRecyclerView.adapter!!.notifyDataSetChanged()
+                val offset = viewModel.getOffset().toInt()
+                viewModel.setOffset((offset + 10).toString())
             }
         }
     }
@@ -184,7 +206,7 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
             val d = Drawable.createFromStream(ims, null)
             d!!
         } catch (ex: IOException) {
-            context?.getDrawable(R.drawable.tav_airports_international)!!
+            AppCompatResources.getDrawable(requireActivity(),R.drawable.tav_airports_international)!!
         }
     }
 
@@ -192,9 +214,9 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
         selected.isEnabled = false
         default.isEnabled = true
         selected.background =
-            ContextCompat.getDrawable(requireContext(), R.drawable.selected_button_background);
+            ContextCompat.getDrawable(requireContext(), R.drawable.selected_button_background)
         default.background =
-            ContextCompat.getDrawable(requireContext(), R.drawable.default_button_background);
+            ContextCompat.getDrawable(requireContext(), R.drawable.default_button_background)
         selected.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_tab))
         default.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
     }
@@ -218,8 +240,7 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
     }
 
     private fun loadMore() {
-        val handler = Handler()
-        handler.postDelayed(Runnable {
+        Handler(Looper.getMainLooper()).postDelayed({
             if (isDeparture) {
                 viewModel.getDepartureFlights(requireActivity(), getString(R.string.icao))
             } else {

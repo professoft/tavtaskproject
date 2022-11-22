@@ -5,11 +5,9 @@
     <string name="mail">e-Mail</string>
     <string name="flights">Flights</string>
     <string name="currency_converter">currency converter</string>
-    <string name="enterValidEmail">Please enter valid e-Mail</string>
+    <string name="enterValidEmail">Please enter valid e-mail</string>
     <string name="enterPassword">Please enter password</string>
     <string name="enterAmount">Please enter amount</string>
-    <string name="alertLogin">The mail or password you entered is incorrect</string>
-    <string name="alert">Alert</string>
     <string name="loginDialogTag">loginDialog</string>
     <string name="departure">Departure</string>
     <string name="arrival">Arrival</string>
@@ -18,16 +16,26 @@
     <string name="enterText">"Please enter text"</string>
     <string name="enter_the_amount">Enter the amount</string>
     <string name="sar">SAR</string>
-    <string name="must_login">You must be logged in to use this feature.</string>
+
+    <string name="warning">WARNING</string>
+    <string name="warning_no_internet_connection">Please check your internet connection</string>
+    <string name="warning_incorrect_login">The mail or password you entered is incorrect</string>
+    <string name="warning_login_must">You must be logged in to use this feature.</string>
+
     <string name="ok">OK</string>
-    <string name="cancel">CANCEL</string>
+    <string name="cancel">Cancel</string>
+
     <string name="icao">LTBJ</string>
-    <string name="flight_loading_message">Flights loading... Please Wait...</string>
-    <string name="flight_updating_message">Flights are updating... Please Wait...</string>
-    <string name="currency_loading_message">Latest currencies loading... Please Wait...</string>
-    <string name="login_loading_message">Logining in... Please Wait...</string>
+    <string name="flight_loading_message">Flights loading. Please Wait…</string>
+    <string name="flight_updating_message">Flights are updating. Please Wait…</string>
+    <string name="currency_loading_message">Latest currencies loading… Please Wait…</string>
+    <string name="login_loading_message">Logining in. Please Wait…</string>
     <string name="loading_hide_message">Hide</string>
+    <string name="network_connection_error">Network Connection Error</string>
     <string name="gate">Gate: %s</string>
+    <string name="current_type">Current Type</string>
+    <string name="bid">Bid</string>
+    <string name="ask">Ask</string>
     <string-array name="currencies">
         <item name="1inch">1INCH</item>
         <item name="aave">AAVE</item>

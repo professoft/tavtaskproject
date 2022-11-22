@@ -8,7 +8,6 @@ import com.professoft.tavtask.data.model.User
 import com.professoft.tavtask.data.realm.RealmDatabase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.realm.kotlin.query.RealmResults
-import io.realm.kotlin.types.ObjectId
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -102,6 +101,7 @@ class MainViewModel @Inject constructor(
     private fun storeDefaultOffset() = runBlocking {
         datastoreRepo.putString("offset", "0")
     }
+
 }
 
 

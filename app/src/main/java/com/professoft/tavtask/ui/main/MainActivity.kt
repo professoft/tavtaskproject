@@ -1,7 +1,8 @@
 package com.professoft.tavtask.ui.main
 
-import android.app.AlertDialog
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.Button
 import android.widget.ImageView
 import android.window.OnBackInvokedDispatcher
@@ -45,6 +46,9 @@ class MainActivity : BaseActivity() {
         val view = binding.root
         setContentView(view)
         initViewModel(viewModel)
+        if(!viewModel.isOnline(this)){
+            showWarning(getString(R.string.warning_no_internet_connection))
+        }
         selectFragment(FlightFragment())
         flightsButton = binding.flightsButton
         currencyConverterButton = binding.currencyConverterButton
@@ -81,10 +85,15 @@ class MainActivity : BaseActivity() {
             when (it) {
                 false -> {
                     if (checkActiveUserForCurrencyConverter) {
-                        showAlertDialog(true)
+                        showWarning(getString(R.string.warning_login_must))
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            loginDialog = LoginDialog(this) { mail, password ->
+                                viewModel.checkUser(mail, password)
+                            }
+                            loginDialog?.show()
+                        }, 1500)
                     }
                 }
-
                 true -> {
                     activeUser = true
                     loginButton.setImageResource(R.drawable.profile_information)
@@ -100,10 +109,9 @@ class MainActivity : BaseActivity() {
         viewModel.checkLogin.observe(this) {
             when (it) {
                 false -> {
-                    showAlertDialog(false)
+                    showWarning(getString(R.string.warning_incorrect_login))
                 }
                 true -> {
-
                     loginDialog?.let { dialog ->
                         if (dialog.isShowing) {
                             dialog.dismiss()
@@ -130,6 +138,9 @@ class MainActivity : BaseActivity() {
     }
 
     private fun navigateFlights() {
+        if(!viewModel.isOnline(this)){
+            showWarning(getString(R.string.warning_no_internet_connection))
+        }
         flightsButton.isEnabled = false
         currencyConverterButton.isEnabled = true
         changeButtonStyle(flightsButton, currencyConverterButton)
@@ -138,6 +149,9 @@ class MainActivity : BaseActivity() {
     }
 
     private fun navigateCurrencyConverter() {
+        if(!viewModel.isOnline(this)){
+            showWarning(getString(R.string.warning_no_internet_connection))
+        }
         currencyConverterButton.isEnabled = false
         flightsButton.isEnabled = true
         changeButtonStyle(currencyConverterButton, flightsButton)
@@ -150,8 +164,8 @@ class MainActivity : BaseActivity() {
 
     private fun changeButtonStyle(selected: Button, default: Button) {
         selected.background =
-            ContextCompat.getDrawable(this, R.drawable.selected_button_background);
-        default.background = ContextCompat.getDrawable(this, R.drawable.default_button_background);
+            ContextCompat.getDrawable(this, R.drawable.selected_button_background)
+        default.background = ContextCompat.getDrawable(this, R.drawable.default_button_background)
         selected.setTextColor(ContextCompat.getColor(this, R.color.color_tab))
         default.setTextColor(ContextCompat.getColor(this, R.color.white))
     }
@@ -179,23 +193,5 @@ class MainActivity : BaseActivity() {
                 }
             })
         }
-    }
-    private fun showAlertDialog(must: Boolean) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(getString(R.string.alert))
-        if (must) {
-            builder.setMessage(getString(R.string.must_login))
-        } else {
-            builder.setMessage(getString(R.string.alertLogin))
-        }
-        builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
-            if (must) {
-                loginDialog = LoginDialog(this) { mail, password ->
-                    viewModel.checkUser(mail, password)
-                }
-                loginDialog?.show()
-            }
-        }
-        builder.show()
     }
 }

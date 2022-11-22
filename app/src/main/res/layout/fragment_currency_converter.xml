@@ -29,7 +29,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="Current Type"
+                android:text="@string/current_type"
                 android:gravity="center"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toStartOf="@id/bid"
@@ -40,7 +40,7 @@
                 android:id="@+id/bid"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Bid"
+                android:text="@string/bid"
                 android:gravity="center"
                 android:textColor="@color/white"
                 app:layout_constraintStart_toEndOf="@id/currencyType"
@@ -52,7 +52,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:text="Ask"
+                android:text="@string/ask"
                 android:gravity="center"
                 android:textColor="@color/white"
                 app:layout_constraintStart_toEndOf="@id/bid"
@@ -101,14 +101,15 @@
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="@id/amountFields"
                 app:layout_constraintStart_toStartOf="@id/convertButton"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:autofillHints="Enter the amount" />
 
             <Spinner
                 android:id="@+id/spinnerConvercies"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@drawable/currencies_background"
-                android:contentDescription="@string/alert"
+                android:contentDescription="@string/warning"
                 android:entries="@array/currencies"
                 android:gravity="center_vertical"
                 app:layout_constraintBottom_toBottomOf="@id/inputFields"
@@ -129,7 +130,8 @@
                 android:text=""
                 android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="@id/convertButton"
-                app:layout_constraintTop_toBottomOf="@id/inputFields" />
+                app:layout_constraintTop_toBottomOf="@id/inputFields"
+                android:autofillHints="Amount" />
 
             <TextView
                 android:id="@+id/amountFieldsCurrency"

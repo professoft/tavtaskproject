@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import com.professoft.tavtask.R
 import com.professoft.tavtask.base.BaseViewModel
 import com.professoft.tavtask.data.datastore.DataStoreRepo
-import com.professoft.tavtask.interfaces.NetworkResponseCallback
 import com.professoft.tavtask.network.FlightRestClient
 import com.professoft.tavtask.models.FlightResponseModel
 import com.professoft.tavtask.utils.Keys
@@ -21,18 +20,9 @@ import javax.inject.Inject
 class FlightViewModel @Inject constructor(private var datastoreRepo: DataStoreRepo) : BaseViewModel() {
     var flightList: MutableLiveData<FlightResponseModel> = MutableLiveData()
     private lateinit var mFlightCall: Call<FlightResponseModel>
-    private lateinit var mutableCallback: NetworkResponseCallback
 
     fun getArrivalFlights(context: Context, arr_icao: String) {
         if (NetworkHelper.isOnline(context)) {
-            mutableCallback = object : NetworkResponseCallback {
-                override fun onNetworkFailure(th: Throwable) {
-                    networkError.value = th.message
-                }
-
-                override fun onNetworkSuccess() {
-                }
-            }
             loading.value = context.getString(R.string.flight_loading_message)
             mFlightCall = FlightRestClient.getInstance().getFlightApiService()
                 .getArrivalFlights(Keys.apiKey(), arr_icao, "10", getOffset())
@@ -44,13 +34,11 @@ class FlightViewModel @Inject constructor(private var datastoreRepo: DataStoreRe
                 ) {
                     flightList.postValue(response.body())
                     loading.value = context.getString(R.string.loading_hide_message)
-                    mutableCallback.onNetworkSuccess()
                 }
 
                 override fun onFailure(call: Call<FlightResponseModel>, t: Throwable) {
-                    networkError.value = t.message
                     loading.value = context.getString(R.string.loading_hide_message)
-                    mutableCallback.onNetworkFailure(t)
+                    networkError.value = t.message
                 }
 
             })
@@ -59,13 +47,6 @@ class FlightViewModel @Inject constructor(private var datastoreRepo: DataStoreRe
 
     fun getDepartureFlights(context: Context, dep_icao: String) {
         if (NetworkHelper.isOnline(context)) {
-            mutableCallback = object : NetworkResponseCallback {
-                override fun onNetworkFailure(th: Throwable) {
-                    networkError.value = th.message
-                }
-                override fun onNetworkSuccess() {
-                }
-            }
             loading.value = context.getString(R.string.flight_loading_message)
             mFlightCall = FlightRestClient.getInstance().getFlightApiService()
                 .getDepartureFlights(Keys.apiKey(), dep_icao, "10", getOffset())
@@ -77,13 +58,11 @@ class FlightViewModel @Inject constructor(private var datastoreRepo: DataStoreRe
                 ) {
                     flightList.postValue(response.body())
                     loading.value = context.getString(R.string.loading_hide_message)
-                    mutableCallback.onNetworkSuccess()
                 }
 
                 override fun onFailure(call: Call<FlightResponseModel>, t: Throwable) {
-                    networkError.value = t.message
                     loading.value = context.getString(R.string.loading_hide_message)
-                    mutableCallback.onNetworkFailure(t)
+                    networkError.value = t.message
                 }
 
             })
@@ -97,4 +76,6 @@ class FlightViewModel @Inject constructor(private var datastoreRepo: DataStoreRe
      fun getOffset(): String = runBlocking {
         datastoreRepo.getString("offset")!!
     }
+
+
 }

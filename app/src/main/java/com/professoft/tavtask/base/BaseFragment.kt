@@ -14,8 +14,6 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
     private var baseViewModel: BaseViewModel? = null
     private var baseActivity: BaseActivity? = null
     private var dialog: Dialog? = null
-    private var _binding: VB? = null
-    val binding get() = _binding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -31,15 +29,6 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = getViewBinding(inflater,container)
-        return binding.root
-    }
-
     abstract fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): VB
 
     fun initViewModel(viewModel: BaseViewModel) {
@@ -50,18 +39,21 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
 
     fun observeLoadingCallback() {
         baseViewModel?.loading?.observe(viewLifecycleOwner) {
-                if(it != requireContext().getString(R.string.loading_hide_message)) {
-                    baseActivity?.showLoading(it)
-                }
-                else {
-                    baseActivity?.hideLoading()
-                }
+            if (it != requireContext().getString(R.string.loading_hide_message)) {
+                baseActivity?.showLoading(it)
+            } else {
+                baseActivity?.hideLoading()
             }
-    }
-    fun observeNetworkErrorCallback(){
-        baseViewModel?.networkError?.observe(viewLifecycleOwner) {
-                baseActivity?.showAlertMessage(baseViewModel?.networkError!!.value.toString())
         }
+    }
+
+    fun observeNetworkErrorCallback() {
+        baseViewModel?.networkError?.observe(viewLifecycleOwner) {
+            baseActivity?.showWarning(it)
+        }
+    }
+    fun showWarning(warning_message: String){
+        baseActivity?.showWarning(warning_message)
     }
 }
 

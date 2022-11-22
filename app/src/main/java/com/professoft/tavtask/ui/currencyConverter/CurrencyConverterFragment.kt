@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
@@ -24,24 +25,28 @@ import java.math.BigDecimal
 @AndroidEntryPoint
 class CurrencyConverterFragment(var activeUser: Boolean) :
     BaseFragment<FragmentCurrencyConverterBinding>() {
+    private lateinit var binding: FragmentCurrencyConverterBinding
     lateinit var manager: RecyclerView.LayoutManager
     lateinit var currencyConverterList: List<CurrencyConverterItemModel>
     private lateinit var currencyRatio: HashMap<String, BigDecimal>
     lateinit var arrayAdapter: ArrayAdapter<String>
 
-    companion object {
-        fun newInstance() = CurrencyConverterFragment(false)
-    }
-
     private lateinit var viewModel: CurrencyConverterViewModel
 
+    companion object {
+    }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        super.onCreateView(inflater, container, savedInstanceState)
+        binding = FragmentCurrencyConverterBinding.inflate(LayoutInflater.from(layoutInflater.context))
         viewModel = ViewModelProvider(this)[CurrencyConverterViewModel::class.java]
         initViewModel(viewModel)
         manager = LinearLayoutManager(context)
-        var arrayCurrencies: Array<String> = resources.getStringArray(R.array.currencies)
+        val arrayCurrencies: Array<String> = resources.getStringArray(R.array.currencies)
         binding.convertButton.isEnabled = activeUser
         arrayAdapter = ArrayAdapter<String>(
             requireActivity(),
@@ -56,13 +61,14 @@ class CurrencyConverterFragment(var activeUser: Boolean) :
         binding.convertButton.setOnClickListener {
             if (nullCheck()) {
                 dismissKeyboard(requireActivity())
-                var ratio =currencyRatio.get(arrayCurrencies.get(binding.spinnerConvercies.selectedItemPosition))!!
-                var input =binding.inputFields.text.toString().toBigDecimal()
-                var result = viewModel.convertCurrency(ratio,input)
+                val ratio =currencyRatio.get(arrayCurrencies.get(binding.spinnerConvercies.selectedItemPosition))!!
+                val input =binding.inputFields.text.toString().toBigDecimal()
+                val result = viewModel.convertCurrency(ratio,input)
                 binding.amountFields.setText(result.toString())
             }
         }
         eventBusListening()
+        return binding.root
     }
 
     private fun eventBusListening() {
@@ -78,12 +84,12 @@ class CurrencyConverterFragment(var activeUser: Boolean) :
             currencyConverterList =
                 MutableList(it.sar.size) { CurrencyConverterItemModel("", "", "") }
             for (position in 0 until it.sar.size) {
-                var currencyName: String = ArrayList<String>(it.sar.keys)[position]
+                val currencyName: String = ArrayList<String>(it.sar.keys)[position]
                 currencyConverterList[position].currencyType = currencyName
                 arrayCurrencies[position] = currencyName
 
                 currencyRatio = it.sar
-                var ratio: BigDecimal = ArrayList<BigDecimal>(it.sar.values)[position]
+                val ratio: BigDecimal = ArrayList<BigDecimal>(it.sar.values)[position]
                 currencyConverterList[position].ask = ratio.toString()
                 currencyConverterList[position].bid = ratio.toString()
             }
@@ -92,7 +98,7 @@ class CurrencyConverterFragment(var activeUser: Boolean) :
                 adapter = CurrencyAdapter(currencyConverterList)
                 layoutManager = manager
             }
-            binding.currencyConverterRecyclerView.adapter!!.notifyDataSetChanged()
+            binding.currencyConverterRecyclerView.adapter!!.notifyItemRangeInserted(0,   10)
         }
     }
     private fun loginCallBack() {
