@@ -1,4 +1,4 @@
-package com.professoft.tavtask.utils
+package com.professoft.tavtask.models
 
 import android.graphics.drawable.Drawable
 

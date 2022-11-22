@@ -130,12 +130,16 @@ class MainActivity : BaseActivity() {
     }
 
     private fun navigateFlights() {
+        flightsButton.isEnabled = false
+        currencyConverterButton.isEnabled = true
         changeButtonStyle(flightsButton, currencyConverterButton)
         checkActiveUserForCurrencyConverter = false
         selectFragment(FlightFragment())
     }
 
     private fun navigateCurrencyConverter() {
+        currencyConverterButton.isEnabled = false
+        flightsButton.isEnabled = true
         changeButtonStyle(currencyConverterButton, flightsButton)
         checkActiveUserForCurrencyConverter = true
         viewModel.checkActiveUser()

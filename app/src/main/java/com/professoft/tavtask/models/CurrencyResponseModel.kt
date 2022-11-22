@@ -1,6 +1,5 @@
-package com.professoft.tavtask.utils
+package com.professoft.tavtask.models
 
-import androidx.lifecycle.MutableLiveData
 import java.math.BigDecimal
 
 class CurrencyResponseModel {

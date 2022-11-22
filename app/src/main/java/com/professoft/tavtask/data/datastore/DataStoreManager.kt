@@ -16,16 +16,16 @@ class DataStoreManager @Inject constructor(
     private val context: Context
 ) : DataStoreRepo {
     override suspend fun putString(key: String, value: String) {
-        val prefereneKay = stringPreferencesKey(key)
+        val preferenceKay = stringPreferencesKey(key)
         context.dataStore.edit {
-            it[prefereneKay] = value
+            it[preferenceKay] = value
         }
     }
 
     override suspend fun putBoolean(key: String, value: Boolean) {
-        val prefernceKey = booleanPreferencesKey(key)
+        val preferenceKey = booleanPreferencesKey(key)
         context.dataStore.edit {
-            it[prefernceKey] = value
+            it[preferenceKey] = value
         }
     }
 

@@ -46,6 +46,7 @@ android {
         }
     }
     testOptions {
+        animationsDisabled = true
         unitTests {
             includeAndroidResources = true
         }
@@ -64,6 +65,8 @@ dependencies {
     implementation 'androidx.room:room-common:2.4.3'
     implementation 'com.google.ar:core:1.30.0'
     implementation 'com.google.firebase:firebase-crashlytics-buildtools:2.8.1'
+    debugImplementation 'androidx.test:runner:1.4.0'
+    debugImplementation 'androidx.fragment:fragment-testing:1.4.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
@@ -84,6 +87,10 @@ dependencies {
     testImplementation "org.powermock:powermock-module-junit4-rule:2.0.4"
     testImplementation "org.powermock:powermock-api-mockito2:2.0.4"
     androidTestImplementation "com.google.truth:truth:1.1"
+    testImplementation "org.robolectric:robolectric:4.0.2"
+    androidTestImplementation "io.mockk:mockk-android:1.11.0"
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0"
+    androidTestImplementation "io.insert-koin:koin-test-junit4:3.0.2"
 
 
     implementation 'com.squareup.retrofit2:retrofit:2.7.1'
@@ -98,4 +105,6 @@ dependencies {
 
     implementation 'androidx.datastore:datastore-preferences:1.0.0'
     implementation 'com.google.code.gson:gson:2.8.6'
+    testImplementation 'org.robolectric:robolectric:4.8'
+
 }

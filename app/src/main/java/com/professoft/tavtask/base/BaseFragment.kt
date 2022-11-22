@@ -45,6 +45,7 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
     fun initViewModel(viewModel: BaseViewModel) {
         baseViewModel = viewModel
         observeLoadingCallback()
+        observeNetworkErrorCallback()
     }
 
     fun observeLoadingCallback() {

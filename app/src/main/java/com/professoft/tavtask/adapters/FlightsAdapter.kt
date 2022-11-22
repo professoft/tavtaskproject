@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.professoft.tavtask.databinding.FlightsItemBinding
-import com.professoft.tavtask.utils.FlightsModel
+import com.professoft.tavtask.models.FlightDataModel
 
-class FlightsAdapter(private var FlightsConverterList: List<FlightsModel>) : RecyclerView.Adapter<FlightsAdapter.FlightsViewHolder>() {
+class FlightsAdapter(private var FlightsConverterList: List<FlightDataModel>) : RecyclerView.Adapter<FlightsAdapter.FlightsViewHolder>() {
     inner class FlightsViewHolder(val itemBinding: FlightsItemBinding) : RecyclerView.ViewHolder(itemBinding.root){
-        fun bind(FlightsItemModel: FlightsModel) {
+        fun bind(FlightsItemModel: FlightDataModel) {
             itemBinding.flightsItem = FlightsItemModel
         }
     }

@@ -1,4 +1,4 @@
-package com.professoft.tavtask.utils
+package com.professoft.tavtask.models
 
 class DepartureModel(){
     var icao: String = ""

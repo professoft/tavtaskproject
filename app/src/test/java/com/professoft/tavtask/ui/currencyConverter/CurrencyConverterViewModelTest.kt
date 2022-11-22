@@ -12,15 +12,9 @@ internal class CurrencyConverterViewModelTest{
 
     private val bigDecimalInput: BigDecimal = BigDecimal(0.20000)
     private val bigDecimalRatio: BigDecimal = BigDecimal(0.50000)
-    private val formattedBigDecimal: String = "0.15"
     private val resultOfCurrencyConverter: String = "0.10"
     private var currencyConverterViewModel: CurrencyConverterViewModel = CurrencyConverterViewModel()
 
-    @Test
-    fun testBigDecimalFormatter() {
-        var result = currencyConverterViewModel.bigDecimalFormat(bigDecimalInput).toString()
-        Assert.assertEquals(result,formattedBigDecimal)
-    }
     @Test
     fun testCurrencyConverter() {
         var result = currencyConverterViewModel.convertCurrency(bigDecimalInput,bigDecimalRatio).toString()

@@ -1,6 +1,6 @@
-package com.professoft.tavtask.utils
+package com.professoft.tavtask.models
 
-class FlightsModel {
+class FlightDataModel {
     lateinit var flight_status: String
     lateinit var flight_date: String
     lateinit var departure: DepartureModel
@@ -13,7 +13,8 @@ class FlightsModel {
                 departure: DepartureModel,
                 arrival: ArrivalModel,
                 airline: AirlineModel,
-                flights: FlightModel ) {
+                flights: FlightModel
+    ) {
         this.departure = departure
         this.arrival = arrival
         this.flight_status = flight_status

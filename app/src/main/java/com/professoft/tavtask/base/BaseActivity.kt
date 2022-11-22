@@ -65,10 +65,7 @@ abstract class BaseActivity : AppCompatActivity() {
     })
 
     open fun showAlertMessage(networkError: String){
-        Toast.makeText(this,networkError,Toast.LENGTH_SHORT)
+        Toast.makeText(this,networkError,Toast.LENGTH_SHORT).show()
     }
-
-
-
 }
 

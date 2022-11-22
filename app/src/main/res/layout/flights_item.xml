@@ -5,7 +5,7 @@
     <data>
         <variable
             name="flightsItem"
-            type="com.professoft.tavtask.utils.FlightsModel"/>
+            type="com.professoft.tavtask.models.FlightDataModel"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/flightItemLayout"

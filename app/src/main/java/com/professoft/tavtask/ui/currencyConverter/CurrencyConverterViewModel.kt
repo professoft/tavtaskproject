@@ -4,17 +4,14 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import com.professoft.tavtask.R
 import com.professoft.tavtask.base.BaseViewModel
-import com.professoft.tavtask.data.datastore.DataStoreRepo
-import com.professoft.tavtask.data.realm.RealmDatabase
 import com.professoft.tavtask.interfaces.NetworkResponseCallback
 import com.professoft.tavtask.network.CurrencyRestClient
-import com.professoft.tavtask.utils.CurrencyResponseModel
+import com.professoft.tavtask.models.CurrencyResponseModel
 import com.professoft.tavtask.utils.NetworkHelper
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.math.BigDecimal
-import java.math.RoundingMode
 
 
 class CurrencyConverterViewModel() : BaseViewModel() {
@@ -54,10 +51,7 @@ class CurrencyConverterViewModel() : BaseViewModel() {
             })
         }
     }
-    fun bigDecimalFormat(bigDecimal: BigDecimal) : BigDecimal{
-        return bigDecimal.setScale(2, RoundingMode.HALF_EVEN)
-    }
     fun convertCurrency(ratio: BigDecimal, input: BigDecimal) : BigDecimal{
-        return bigDecimalFormat(ratio.multiply(input))
+        return ratio.multiply(input)
     }
 }

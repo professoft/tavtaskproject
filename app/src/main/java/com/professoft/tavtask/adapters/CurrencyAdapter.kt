@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.professoft.tavtask.databinding.CurrencyConverterItemBinding
-import com.professoft.tavtask.utils.CurrencyConverterItemModel
+import com.professoft.tavtask.models.CurrencyConverterItemModel
 
 class CurrencyAdapter(private var currencyConverterList: List<CurrencyConverterItemModel>) : RecyclerView.Adapter<CurrencyAdapter.CurrencyViewHolder>() {
     inner class CurrencyViewHolder(val itemBinding: CurrencyConverterItemBinding) : RecyclerView.ViewHolder(itemBinding.root){

@@ -21,8 +21,8 @@ class CurrencyRestClient {
         }
     }
     init {
-        val okHttpClient = OkHttpClient().newBuilder().connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
+        val okHttpClient = OkHttpClient().newBuilder().connectTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(15, TimeUnit.SECONDS)
             .build()
         val retrofit = Retrofit.Builder().baseUrl(CURRENCY_URL)
             .client(okHttpClient)

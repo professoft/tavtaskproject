@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
@@ -17,10 +16,9 @@ import com.professoft.tavtask.adapters.CurrencyAdapter
 import com.professoft.tavtask.base.BaseFragment
 import com.professoft.tavtask.databinding.FragmentCurrencyConverterBinding
 import com.professoft.tavtask.helpers.IntentService
-import com.professoft.tavtask.utils.CurrencyConverterItemModel
+import com.professoft.tavtask.models.CurrencyConverterItemModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.math.BigDecimal
-import java.math.RoundingMode
 
 
 @AndroidEntryPoint
@@ -86,8 +84,8 @@ class CurrencyConverterFragment(var activeUser: Boolean) :
 
                 currenyRatio = it.sar
                 var ratio: BigDecimal = ArrayList<BigDecimal>(it.sar.values)[position]
-                currencyConverterList[position].ask = viewModel.bigDecimalFormat(ratio).toString()
-                currencyConverterList[position].bid = viewModel.bigDecimalFormat(ratio).toString()
+                currencyConverterList[position].ask = ratio.toString()
+                currencyConverterList[position].bid = ratio.toString()
             }
             arrayAdapter.notifyDataSetChanged()
             binding.currencyConverterRecyclerView.apply {

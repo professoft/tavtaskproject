@@ -17,8 +17,8 @@ import com.professoft.tavtask.R
 import com.professoft.tavtask.adapters.FlightsAdapter
 import com.professoft.tavtask.base.BaseFragment
 import com.professoft.tavtask.databinding.FragmentFlightBinding
-import com.professoft.tavtask.utils.FlightsModel
-import com.professoft.tavtask.utils.FlightsResponse
+import com.professoft.tavtask.models.FlightDataModel
+import com.professoft.tavtask.models.FlightResponseModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
 import java.io.InputStream
@@ -33,7 +33,7 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
     private lateinit var flightsAdapter: FlightsAdapter
     private lateinit var departureButton: Button
     private lateinit var arrivalButton: Button
-    private lateinit var flightsList: FlightsResponse
+    private lateinit var flightsList: FlightResponseModel
     private var isDeparture = true;
     private var isLoading = false
 
@@ -45,7 +45,7 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
 
 
     private fun filter(text: String) {
-        val filteredList: ArrayList<FlightsModel> = ArrayList()
+        val filteredList: ArrayList<FlightDataModel> = ArrayList()
 
         for ((position, item) in flightsList.data.withIndex()) {
             if (isDeparture) {
@@ -103,7 +103,7 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
                     filter(search)
                 }
                 else{
-                    Toast.makeText(requireActivity(),requireActivity().getString(R.string.enterText),Toast.LENGTH_SHORT)
+                    Toast.makeText(requireActivity(),getString(R.string.enterText),Toast.LENGTH_SHORT).show()
                 }
                 return false
             }
@@ -189,6 +189,8 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
     }
 
     private fun changeButtonStyle(selected: Button, default: Button) {
+        selected.isEnabled = false
+        default.isEnabled = true
         selected.background =
             ContextCompat.getDrawable(requireContext(), R.drawable.selected_button_background);
         default.background =

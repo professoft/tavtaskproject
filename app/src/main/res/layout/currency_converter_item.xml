@@ -5,7 +5,7 @@
     <data>
         <variable
             name="currencyConverterItem"
-            type="com.professoft.tavtask.utils.CurrencyConverterItemModel"/>
+            type="com.professoft.tavtask.models.CurrencyConverterItemModel"/>
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
