@@ -44,30 +44,11 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
 
     private lateinit var viewModel: FlightViewModel
 
-
-    private fun filter(text: String) {
-        val filteredList: ArrayList<FlightDataModel> = ArrayList()
-
-        for ((position, item) in flightsList.data.withIndex()) {
-            if (isDeparture) {
-                if (item.departure.airport.uppercase(Locale.getDefault())
-                        .contains(text.uppercase(Locale.getDefault()))
-                ) {
-                    filteredList.add(flightsList.data[position])
-                }
-            } else {
-                if (item.arrival.airport.uppercase(Locale.getDefault())
-                        .contains(text.uppercase(Locale.getDefault()))
-                ) {
-                    filteredList.add(flightsList.data[position])
-                }
-            }
-        }
-        if (filteredList.isEmpty()) {
-            showWarning(getString(R.string.warning_search))
-        } else {
-            binding.flightsRecyclerView.adapter = FlightsAdapter(filteredList)
-        }
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentFlightBinding {
+        return FragmentFlightBinding.inflate(inflater, container, false)
     }
 
     override fun onCreateView(
@@ -89,10 +70,9 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
         initScrollListener()
 
         departureButton.setOnClickListener {
-            if(!viewModel.isOnline(requireActivity())){
+            if (!viewModel.isOnline(requireActivity())) {
                 showWarning(getString(R.string.warning_no_internet_connection))
-            }
-            else{
+            } else {
                 viewModel.getDepartureFlights(requireActivity(), getString(R.string.icao))
             }
             viewModel.setOffset("0")
@@ -101,40 +81,65 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
         }
 
         arrivalButton.setOnClickListener {
-            if(!viewModel.isOnline(requireActivity())){
+            if (!viewModel.isOnline(requireActivity())) {
                 showWarning(getString(R.string.warning_no_internet_connection))
-            }
-            else{
+            } else {
                 viewModel.getArrivalFlights(requireActivity(), getString(R.string.icao))
             }
             viewModel.setOffset("0")
             isDeparture = false
             changeButtonStyle(arrivalButton, departureButton)
         }
-
+        binding.searchView.isEnabled = false
+        binding.searchView.setOnClickListener {
+            binding.searchView.onActionViewExpanded()
+        }
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
             android.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(search: String?): Boolean {
                 if (search != null) {
                     filter(search)
-                }
-                else{
+                } else {
                     showWarning(getString(R.string.enterText))
                 }
                 return false
             }
-
             override fun onQueryTextChange(filter: String): Boolean {
                 filter(filter)
                 return false
             }
         })
-        if(viewModel.isOnline(requireActivity())){
+        if (viewModel.isOnline(requireActivity())) {
             viewModel.loading.postValue(requireContext().getString(R.string.flight_loading_message))
         }
+        departureButton.isEnabled = false
         viewModel.getDepartureFlights(requireActivity(), getString(R.string.icao))
         isDeparture = true
         return binding.root
+    }
+
+    private fun filter(text: String) {
+        val filteredList: ArrayList<FlightDataModel> = ArrayList()
+        for ((position, item) in flightsList.data.withIndex()) {
+            if (isDeparture) {
+                if (item.arrival.airport.uppercase(Locale.getDefault())
+                        .contains(text.uppercase(Locale.getDefault()))
+                ) {
+                    filteredList.add(flightsList.data[position])
+                }
+            } else {
+                if (item.departure.airport.uppercase(Locale.getDefault())
+                        .contains(text.uppercase(Locale.getDefault()))
+                ) {
+                    filteredList.add(flightsList.data[position])
+                }
+            }
+        }
+        if (filteredList.isEmpty()) {
+            showWarning(getString(R.string.warning_search))
+        } else {
+            binding.flightsRecyclerView.adapter = FlightsAdapter(filteredList)
+        }
     }
 
     private fun updateFlightsCallback() {
@@ -142,16 +147,6 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
             if (it != null) {
                 flightsList = it
                 var position = 0
-                flightsList.data.forEach { data ->
-                    if (data.arrival.gate.isNullOrEmpty()) {
-                        flightsList.data[position].arrival.gate = getString(R.string.unspecified)
-                    }
-                    if (data.departure.gate.isNullOrEmpty()) {
-                        flightsList.data[position].departure.gate = getString(R.string.unspecified)
-                    }
-                    position++
-                }
-                position = 0
                 flightsList.data.forEach {
                     flightsList.data[position].airline.airlineNameWithIcon =
                         iconMatching(it.airline.name)
@@ -166,33 +161,26 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
                 binding.flightsRecyclerView.adapter!!.notifyDataSetChanged()
                 val offset = viewModel.getOffset().toInt()
                 viewModel.setOffset((offset + 10).toString())
+                binding.searchView.isEnabled = true
             }
         }
     }
 
-    private fun iconMatching(flightDate: String): Drawable {
-        if (flightDate.contains("Turkish")) {
-            return getAsset("turkish_airlines_icon.png")
+    private fun iconMatching(airlineName: String): Drawable {
+        when {
+            airlineName.contains("Turkish") -> return getAsset("turkish_airlines_icon.png")
+            airlineName.contains("Pegasus") -> return getAsset("pegasus_airlines_icon.png")
+            airlineName.contains("SunExpress") -> return getAsset("sunExpress_icon.png")
+            airlineName.contains("Anadolu") -> return getAsset("anadolujet_icon.png")
+            airlineName.contains("Azerbaijan") -> return getAsset("azerbaijan_airlines_icon.png")
+            airlineName.contains("Aegan") -> return getAsset("aegean_airlines_icon.png")
+            airlineName.contains("FreeBird") -> return getAsset("freeBird_airlines_icon.png")
+            airlineName.contains("Qatar") -> return getAsset("qatar_airways_icon.png")
+            airlineName.contains("Iran") -> return getAsset("iran_airtour_icon.png")
+            airlineName.contains("Qeshm") -> return getAsset("qeshm_air_icon.png")
+            airlineName.contains("Corendon") -> return getAsset("corendon_airlines_icon.png")
         }
-        if (flightDate.contains("Pegasus")) {
-            return getAsset("pegasus_airlines_icon.png")
-        }
-        if (flightDate.contains("Azerbaijan")) {
-            return getAsset("azerbaijan_airlines_icon.png")
-        }
-        if (flightDate.contains("Aegan")) {
-            return getAsset("aegean_airlines_icon.png")
-        }
-        if (flightDate.contains("Freebird")) {
-            return getAsset("freebird_airlines_icon.png")
-        }
-        if (flightDate.contains("Qatar")) {
-            return getAsset("qatar_airways_icon.png")
-        }
-        if (flightDate.contains("Sunexpress")) {
-            return getAsset("sunexpress_icon.png")
-        }
-        return ContextCompat.getDrawable(requireActivity(),R.drawable.tav_airports_international)!!
+        return ContextCompat.getDrawable(requireActivity(), R.drawable.tav_airports_international)!!
     }
 
     private fun getAsset(s: String): Drawable {
@@ -201,7 +189,10 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
             val d = Drawable.createFromStream(ims, null)
             d!!
         } catch (ex: IOException) {
-            AppCompatResources.getDrawable(requireActivity(),R.drawable.tav_airports_international)!!
+            AppCompatResources.getDrawable(
+                requireActivity(),
+                R.drawable.tav_airports_international
+            )!!
         }
     }
 
@@ -244,13 +235,6 @@ class FlightFragment : BaseFragment<FragmentFlightBinding>() {
             flightsAdapter.notifyDataSetChanged()
             isLoading = false
         }, 2000)
-    }
-
-    override fun getViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ): FragmentFlightBinding {
-        return FragmentFlightBinding.inflate(inflater, container, false)
     }
 }
 
