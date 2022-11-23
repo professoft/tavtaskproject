@@ -1,4 +1,4 @@
-package com.professoft.tavtask.main
+package com.professoft.tavtask.ui.main
 
 import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
